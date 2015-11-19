@@ -43,14 +43,18 @@ export function logoutAndRedirect() {
 export function loginUser(email, password) {
   return function(dispatch) {
     dispatch(loginUserRequest());
-    return fetch('http://localhost:3000/auth/getToken/', {
+    return fetch('http://backend.spb07.il.ly/api/v0/auth/jwt/signIn', {
       method: 'post',
       credentials: 'include',
       headers: {
         'Accept': 'application/json',
         'Content-Type': 'application/json'
       },
-      body: JSON.stringify({email: email, password: password})
+      body: JSON.stringify({
+        email: email,
+        password: password,
+        rememberMe: true
+      })
     })
     .then(checkHttpStatus)
     .then(parseJSON)

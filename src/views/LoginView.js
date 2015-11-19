@@ -24,7 +24,7 @@ export class LoginView extends React.Component {
     return (
       <div className="col-xs-12 col-md-6 col-md-offset-3">
         <h3>Log in to view protected content!</h3>
-        <p>Hint: hello@test.com / test</p>
+        <p>Hint: hello@example.com / aoeuaoeu</p>
         {this.props.statusText ? <div className="alert alert-info">{this.props.statusText}</div> : ''}
         <form role="form">
         <div className="form-group">
