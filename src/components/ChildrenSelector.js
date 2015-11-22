@@ -23,10 +23,42 @@ export class ChildrenSelector extends React.Component {
   }
 
   onClickChild(child) {
-    return () => {
-      this.clearSearch();
-      this.props.actions.childSelected(child);
+    return () => this.selectChild(child);
+  }
+
+  onKeyPress(child) {
+    return (e) => {
+      if (e.key === 'Enter') {
+        this.selectChild(child);
+      } else if (e.key === 'ArrowDown') {
+        this.selectNextChild('down', child);
+      } else if (e.key === 'ArrowUp') {
+        this.selectNextChild('up', child);
+      }
     };
+  }
+
+  selectNextChild(direction, focusedChild) {
+    const children = this.makeFilteredChildren();
+    const currentChild = this.props.selectedChild ?
+      this.props.selectedChild : focusedChild;
+    const currentChildIndex = children.indexOf(currentChild);
+
+    if (direction === 'down' && currentChildIndex < children.length - 1) {
+      const nextChild = children[currentChildIndex + 1];
+      this.selectChild(nextChild);
+    } else if (direction === 'up' && currentChildIndex > 0) {
+      const nextChild = children[currentChildIndex - 1];
+      this.selectChild(nextChild);
+    }
+  }
+
+  selectChild(child) {
+    this.setState({
+      search: ''
+    });
+    this.props.actions.childSelected(child);
+    this.refs[child.id].focus();
   }
 
   clearSearch() {
@@ -36,7 +68,7 @@ export class ChildrenSelector extends React.Component {
     this._input.focus();
   }
 
-  render() {
+  makeFilteredChildren() {
     let children = this.props.children;
 
     if (this.state.search.length > 0) {
@@ -47,8 +79,11 @@ export class ChildrenSelector extends React.Component {
       });
     }
 
-    children = children.sort((a, b) => a.lastName.localeCompare(b.lastName));
+    return children.sort((a, b) => a.lastName.localeCompare(b.lastName));
+  }
 
+  render() {
+    const children = this.makeFilteredChildren();
     const selectedChildId = this.props.selectedChild ? this.props.selectedChild.id : null;
 
     return (
@@ -70,12 +105,15 @@ export class ChildrenSelector extends React.Component {
           {children.map( (child) =>
             <div
               key={child.id}
+              ref={child.id}
               className={
                 selectedChildId === child.id ?
                 'Children-list-item Children-list-item--highlighted'
                 : 'Children-list-item'
               }
+              tabIndex={children.indexOf(child) + 1}
               onClick={this.onClickChild(child).bind(this)}
+              onKeyUp={this.onKeyPress(child).bind(this)}
               >
               {child.firstName} <b>{child.lastName}</b>
               {

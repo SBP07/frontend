@@ -33,28 +33,30 @@
   margin-right: -25px;
   margin-left: -12.5px;
   padding: 10px;
-  width: 300px;
+  width: 90%;
 }
 
 .Children-list {
   background: #ececec;
-  height: 100%;
+  height: calc(100% - 62px);
+  overflow-y: scroll;
 }
 .Children-list-item {
   padding: 10px 20px;
   cursor: pointer;
-  &:hover {
-    background: rgba(255, 255, 255, 0.5);
+  outline: none;
+  &:hover, &:focus{
+    background: transparentize($list-highlight-color, 0.6);
   }
   strong {
     float: right;
   }
 }
 .Children-list-item--highlighted {
-  background: white;
+  background: $list-highlight-color;
   cursor: default;
-  &:hover {
-    background: white;
+  &:hover, &:focus {
+    background: $list-highlight-color;
   }
 }
 
@@ -64,6 +66,8 @@
   float: left;
   background: white;
   height: 100%;
+  overflow-y: scroll;
+  box-shadow: -1px 0px 5px rgba(0,0,0,.2);
 }
 .ChildDetails {
   padding: 50px;

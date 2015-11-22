@@ -21,7 +21,6 @@ export default createReducer(initialState, {
     });
   },
   [CHILD_SELECTED]: (state, child) => {
-    console.log(child);
     return Object.assign({}, state, {
       'selected': child
     });
