@@ -4,6 +4,12 @@ import {pushState} from 'redux-router';
 
 export function requireAuthentication(Component) {
   class AuthenticatedComponent extends React.Component {
+    static propTypes = {
+      isAuthenticated: React.PropTypes.bool,
+      location: React.PropTypes.object,
+      dispatch: React.PropTypes.func
+    }
+
     componentWillMount() {
       this.checkAuth();
     }
@@ -34,7 +40,6 @@ export function requireAuthentication(Component) {
 
   const mapStateToProps = (state) => ({
     token: state.auth.token,
-    userName: state.auth.userName,
     isAuthenticated: state.auth.isAuthenticated
   });
 

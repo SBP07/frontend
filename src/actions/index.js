@@ -2,6 +2,8 @@ import { checkHttpStatus, parseJSON } from '../utils';
 import {LOGIN_USER_REQUEST, LOGIN_USER_FAILURE, LOGIN_USER_SUCCESS, LOGOUT_USER, FETCH_PROTECTED_DATA_REQUEST, RECEIVE_PROTECTED_DATA} from '../constants';
 import { pushState } from 'redux-router';
 
+const backendURL = 'http://backend.sbp07.il.ly';
+
 export function loginUserSuccess(token) {
   return {
     type: LOGIN_USER_SUCCESS,
@@ -43,7 +45,7 @@ export function logoutAndRedirect() {
 export function loginUser(email, password) {
   return function(dispatch) {
     dispatch(loginUserRequest());
-    return fetch('http://backend.spb07.il.ly/api/v0/auth/jwt/signIn', {
+    return fetch(`${backendURL}/api/v0/auth/jwt/signIn`, {
       method: 'post',
       credentials: 'include',
       headers: {
@@ -87,16 +89,16 @@ export function fetchProtectedDataRequest() {
 export function fetchProtectedData(token) {
   return (dispatch) => {
     dispatch(fetchProtectedDataRequest());
-    return fetch('http://localhost:3000/getData/', {
+    return fetch(`${backendURL}/api/v0/child`, {
       credentials: 'include',
       headers: {
-        'Authorization': `Bearer ${token}`
+        'X-Auth-Token': `${token}`
       }
     })
     .then(checkHttpStatus)
     .then(parseJSON)
-    .then(response => {
-      dispatch(receiveProtectedData(response.data));
+    .then(children => {
+      dispatch(receiveProtectedData(children));
     })
     .catch(error => {
       if (error.response.status === 401) {

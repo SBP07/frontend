@@ -5,7 +5,7 @@ import { ReduxRouter }          from 'redux-router';
 
 export default class Root extends React.Component {
   static propTypes = {
-    store : React.PropTypes.object.isRequired
+    store: React.PropTypes.object.isRequired
   }
 
   render() {

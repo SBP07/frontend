@@ -4,7 +4,6 @@ import jwtDecode from 'jwt-decode';
 
 const initialState = {
   token: null,
-  userName: null,
   isAuthenticated: false,
   isAuthenticating: false,
   statusText: null
@@ -25,27 +24,27 @@ export default createReducer(initialState, {
         'isAuthenticating': false,
         'isAuthenticated': true,
         'token': payload.token,
-        'userName': decoded.userName,
-        'statusText': `You have been successfully signed in as ${decoded.userName}.`
+        'jwt': decoded,
+        'statusText': `You have been successfully signed in.`
       });
     } catch (e) {
-      localStorage.removeItem('token');
+      // localStorage.removeItem('token');
       return Object.assign({}, state, {
         'isAuthenticating': false,
         'isAuthenticated': false,
         'token': null,
-        'userName': null,
+        'jwt': null,
         'statusText': `Invalid access token. Please log in again.`
       });
     }
   },
   [LOGIN_USER_FAILURE]: (state, payload) => {
-    localStorage.removeItem('token');
+    // localStorage.removeItem('token');
     return Object.assign({}, state, {
       'isAuthenticating': false,
       'isAuthenticated': false,
       'token': null,
-      'userName': null,
+      'jwt': null,
       'statusText': `Authentication Error: ${payload.status} ${payload.statusText}`
     });
   },
@@ -54,7 +53,7 @@ export default createReducer(initialState, {
     return Object.assign({}, state, {
       'isAuthenticated': false,
       'token': null,
-      'userName': null,
+      'jwt': null,
       'statusText': 'You have been successfully logged out.'
     });
   }

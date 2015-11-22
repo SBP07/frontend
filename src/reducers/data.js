@@ -2,7 +2,7 @@ import {createReducer} from '../utils';
 import {RECEIVE_PROTECTED_DATA, FETCH_PROTECTED_DATA_REQUEST} from '../constants';
 
 const initialState = {
-  data: null,
+  data: [],
   isFetching: false
 };
 

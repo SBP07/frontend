@@ -5,6 +5,13 @@ import reactMixin from 'react-mixin';
 import * as actionCreators from '../actions';
 
 export class LoginView extends React.Component {
+  static propTypes = {
+    location: React.PropTypes.object,
+    actions: React.PropTypes.object,
+    statusText: React.PropTypes.string,
+    isAuthenticating: React.PropTypes.bool
+  }
+
   constructor(props) {
     super(props);
     const redirectRoute = this.props.location.query.next || '/login';
@@ -22,27 +29,24 @@ export class LoginView extends React.Component {
 
   render() {
     return (
-      <div className="col-xs-12 col-md-6 col-md-offset-3">
-        <h3>Log in to view protected content!</h3>
-        <p>Hint: hello@example.com / aoeuaoeu</p>
+      <div className="Login Login--page">
+        <h1>Login</h1>
         {this.props.statusText ? <div className="alert alert-info">{this.props.statusText}</div> : ''}
         <form role="form">
-        <div className="form-group">
+          <div className="Login-group">
             <input type="text"
-              className="form-control input-lg"
               valueLink={this.linkState('email')}
               placeholder="Email" />
             </div>
-          <div className="form-group">
+          <div className="Login-group">
             <input type="password"
-              className="form-control input-lg"
               valueLink={this.linkState('password')}
               placeholder="Password" />
           </div>
           <button type="submit"
-            className="btn btn-lg"
+            className="Button Button--fluid"
             disabled={this.props.isAuthenticating}
-            onClick={this.login.bind(this)}>Submit</button>
+            onClick={this.login.bind(this)}>Log in</button>
       </form>
     </div>
     );

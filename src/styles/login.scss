@@ -1,0 +1,44 @@
+.Login {
+  margin: 0 auto;
+  max-width: 300px;
+  text-align: center;
+}
+
+.Login--page {
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 0;
+  bottom: 0;
+  height: 400px;
+  margin: auto;
+
+  // Flex
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: stretch;
+}
+
+.Login-group {
+  margin-bottom: 5px;
+}
+
+.Login-group input {
+  padding: 10px;
+  border-radius: 2px;
+  border: 1px solid #efefef;
+  border-right: none;
+  width: 100%;
+}
+
+.Login-group input:first-child {
+  border-bottom-right-radius: 0;
+  border-top-right-radius: 0;
+}
+
+.Login-group input:last-child {
+  border-bottom-left-radius: 0;
+  border-top-left-radius: 0;
+  border-right: 1px solid #efefef;
+}
