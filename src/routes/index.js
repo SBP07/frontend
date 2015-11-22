@@ -6,7 +6,7 @@ import {requireAuthentication} from '../components/AuthenticatedComponent';
 
 export default(
   <Route path="/" component={App}>
-    <IndexRoute component={HomeView}/>
+    <IndexRoute component={requireAuthentication(HomeView)}/>
     <Route path="login" component={LoginView}/>
     <Route path="child">
       <IndexRoute component={requireAuthentication(ChildrenIndexView)}/>
