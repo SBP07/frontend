@@ -4,11 +4,13 @@ import { bindActionCreators } from 'redux';
 import * as actionCreators from '../actions';
 import 'styles/children.scss';
 import {LoadingIcon} from '../components/LoadingIcon';
+import ChildrenSelector from '../components/ChildrenSelector';
+import ChildrenDetails from '../components/ChildrenDetails';
 
 export class ChildrenIndexView extends React.Component {
   static propTypes = {
     isFetching: React.PropTypes.bool,
-    data: React.PropTypes.object,
+    children: React.PropTypes.array,
     token: React.PropTypes.string,
     actions: React.PropTypes.object
   }
@@ -18,19 +20,10 @@ export class ChildrenIndexView extends React.Component {
   }
 
   fetchData() {
-    const token = this.props.token;
-    this.props.actions.fetchProtectedData(token);
-  }
-
-  renderChild(child) {
-    return (
-      <tr>
-        <td>{child.firstName}</td>
-        <td>{child.lastName}</td>
-        <td>{child.birthDate}</td>
-        <td>{child.address.city}</td>
-      </tr>
-    );
+    if (this.props.children.length === 0) {
+      const token = this.props.token;
+      this.props.actions.fetchChildrenData(token);
+    }
   }
 
   renderLoading() {
@@ -45,38 +38,26 @@ export class ChildrenIndexView extends React.Component {
     if (this.props.isFetching === true) {
       return this.renderLoading();
     }
-    if (this.props.data.length === 0) {
+    if (this.props.children.length === 0) {
       return this.renderLoading();
     }
-    const childrenViews = this.props.data.map(this.renderChild);
     return (
-      <div>
-        <table className="ChildrenTable ChildrenTable--celled">
-          <thead>
-            <tr>
-              <th>First Name</th>
-              <th>Last Name</th>
-              <th>Birthdate</th>
-              <th>City</th>
-            </tr>
-          </thead>
-          <tbody>
-            {childrenViews}
-          </tbody>
-        </table>
+      <div className="Children">
+        <ChildrenSelector />
+        <ChildrenDetails />
       </div>
     );
   }
 }
 
 const mapStateToProps = (state) => ({
-  data: state.data.data,
-  isFetching: state.data.isFetching,
+  children: state.children.data,
+  isFetching: state.children.isFetching,
   token: state.auth.token
 });
 
 const mapDispatchToProps = (dispatch) => ({
-  actions : bindActionCreators(actionCreators, dispatch)
+  actions: bindActionCreators(actionCreators, dispatch)
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(ChildrenIndexView);

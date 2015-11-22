@@ -4,7 +4,7 @@ import 'styles/app.scss';
 
 export default class App extends React.Component {
   static propTypes = {
-    children: React.PropTypes.array
+    children: React.PropTypes.object
   }
 
   render() {

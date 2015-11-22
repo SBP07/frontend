@@ -1,46 +1,91 @@
 @import 'base';
 
-.ChildrenTable {
-  width: 100%;
-  background: #FFF;
-  margin: 1em 0;
-  border: 1px solid rgba(34,36,38,.15);
-  border-radius: 3px;
-  text-align: left;
-  color: rgba(0,0,0,.87);
-  border-collapse: separate;
-  border-spacing: 0;
+.Children {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  top: 50px;
+}
 
-  font-size: 1em;
+.Children-sidebar {
+  width: 25%;
+  display: block;
+  float: left;
+  height: 100%;
 
-  thead {
-    text-align: left;
-
-    th {
-      cursor: auto;
-      background: $table-header-background-color;
-      text-align: inherit;
-      color: rgba(0,0,0,.87);
-      padding: $table-padding;
-      vertical-align: inherit;
-      font-style: none;
-      font-weight: 700;
-      text-transform: none;
-      border-bottom: 1px solid rgba(34,36,38,.1);
-      border-left: none;
+}
+.Children-search {
+  padding: 10px;
+  text-align: center;
+  .mdi-close {
+    cursor: pointer;
+    transition: 50ms all;
+    &:hover {
+      border: 1px solid #666;
+      background: #666;
+      color: white;
+      border-radius: 2000px;
     }
   }
+}
+.Children-search-input {
+  margin-right: -25px;
+  margin-left: -12.5px;
+  padding: 10px;
+  width: 300px;
+}
 
-  td {
-    padding: $table-padding;
+.Children-list {
+  background: #ececec;
+  height: 100%;
+}
+.Children-list-item {
+  padding: 10px 20px;
+  cursor: pointer;
+  &:hover {
+    background: rgba(255, 255, 255, 0.5);
+  }
+  strong {
+    float: right;
+  }
+}
+.Children-list-item--highlighted {
+  background: white;
+  cursor: default;
+  &:hover {
+    background: white;
   }
 }
 
-.ChildrenTable--celled {
-  thead th, tbody td {
-    border-left: 1px solid rgba(34,36,38,.1);
-    &:first-child {
-      border-left: none;
-    }
+.Children-main {
+  width: 75%;
+  display: block;
+  float: left;
+  background: white;
+  height: 100%;
+}
+.ChildDetails {
+  padding: 50px;
+}
+.Child-name {
+  margin: 0;
+  font-weight: 100;
+  margin-bottom: 50px;
+}
+.Child-section {
+  padding: 10px 0;
+  border-bottom: 1px dashed rgba(0, 0, 0, .1);
+  &:last-child {
+    border-bottom: none;
   }
+}
+.Child-label {
+  display: inline-block;
+  width: 100px;
+  color: rgba(0, 0, 0, .7);
+}
+.Child-value {
+  display: inline-block;
+  color: black;
 }

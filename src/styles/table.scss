@@ -1,0 +1,46 @@
+@import 'base';
+
+.Table {
+  width: 100%;
+  background: #FFF;
+  margin: 1em 0;
+  border: 1px solid rgba(34,36,38,.15);
+  border-radius: 3px;
+  text-align: left;
+  color: rgba(0,0,0,.87);
+  border-collapse: separate;
+  border-spacing: 0;
+
+  font-size: 1em;
+
+  thead {
+    text-align: left;
+
+    th {
+      cursor: auto;
+      background: $table-header-background-color;
+      text-align: inherit;
+      color: rgba(0,0,0,.87);
+      padding: $table-padding;
+      vertical-align: inherit;
+      font-style: none;
+      font-weight: 700;
+      text-transform: none;
+      border-bottom: 1px solid rgba(34,36,38,.1);
+      border-left: none;
+    }
+  }
+
+  td {
+    padding: $table-padding;
+  }
+}
+
+.Table--celled {
+  thead th, tbody td {
+    border-left: 1px solid rgba(34,36,38,.1);
+    &:first-child {
+      border-left: none;
+    }
+  }
+}

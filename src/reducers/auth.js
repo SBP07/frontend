@@ -28,7 +28,7 @@ export default createReducer(initialState, {
         'statusText': `You have been successfully signed in.`
       });
     } catch (e) {
-      // localStorage.removeItem('token');
+      localStorage.removeItem('token');
       return Object.assign({}, state, {
         'isAuthenticating': false,
         'isAuthenticated': false,
@@ -39,7 +39,7 @@ export default createReducer(initialState, {
     }
   },
   [LOGIN_USER_FAILURE]: (state, payload) => {
-    // localStorage.removeItem('token');
+    localStorage.removeItem('token');
     return Object.assign({}, state, {
       'isAuthenticating': false,
       'isAuthenticated': false,

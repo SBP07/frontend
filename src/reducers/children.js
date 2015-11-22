@@ -1,0 +1,29 @@
+import {createReducer} from '../utils';
+import {RECEIVE_CHILDREN_DATA, FETCH_CHILDREN_DATA_REQUEST, CHILD_SELECTED} from '../constants';
+
+const initialState = {
+  data: [],
+  selected: null,
+  isFetching: false
+};
+
+export default createReducer(initialState, {
+  [RECEIVE_CHILDREN_DATA]: (state, payload) => {
+    return Object.assign({}, state, {
+      'data': payload.data,
+      'selected': null,
+      'isFetching': false
+    });
+  },
+  [FETCH_CHILDREN_DATA_REQUEST]: (state) => {
+    return Object.assign({}, state, {
+      'isFetching': true
+    });
+  },
+  [CHILD_SELECTED]: (state, child) => {
+    console.log(child);
+    return Object.assign({}, state, {
+      'selected': child
+    });
+  }
+});
