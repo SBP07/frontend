@@ -87,7 +87,8 @@ export class ChildrenSelector extends React.Component {
     const selectedChildId = this.props.selectedChild ? this.props.selectedChild.id : null;
 
     return (
-      <div className="Children-sidebar">
+      <div className={selectedChildId ? 'Children-sidebar Child-selected'
+        : 'Children-sidebar'}>
         <div className="Children-search">
           <input
             type="search"

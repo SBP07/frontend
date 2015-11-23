@@ -1,5 +1,5 @@
 import {createReducer} from '../utils';
-import {RECEIVE_CHILDREN_DATA, FETCH_CHILDREN_DATA_REQUEST, CHILD_SELECTED} from '../constants';
+import {RECEIVE_CHILDREN_DATA, FETCH_CHILDREN_DATA_REQUEST, CHILD_SELECTED, CHILD_CLEAR} from '../constants';
 
 const initialState = {
   data: [],
@@ -23,6 +23,11 @@ export default createReducer(initialState, {
   [CHILD_SELECTED]: (state, child) => {
     return Object.assign({}, state, {
       'selected': child
+    });
+  },
+  [CHILD_CLEAR]: (state) => {
+    return Object.assign({}, state, {
+      'selected': null
     });
   }
 });

@@ -5,7 +5,12 @@ import * as actionCreators from '../actions';
 
 export class ChildrenDetails extends React.Component {
   static propTypes = {
-    selectedChild: React.PropTypes.object
+    selectedChild: React.PropTypes.object,
+    actions: React.PropTypes.object
+  }
+
+  goBack() {
+    this.props.actions.clearSelectedChild();
   }
 
   renderBlank() {
@@ -21,7 +26,13 @@ export class ChildrenDetails extends React.Component {
 
     const child = this.props.selectedChild;
     return (
-      <div className="Children-main">
+      <div className="Children-main" >
+        <div className="Mobile NavBar">
+          <i
+            className="mdi mdi-arrow-left"
+            onClick={this.goBack.bind(this)}
+            ></i>
+        </div>
         <div className="ChildDetails">
           <h2 className="Child-name">
             {child.firstName} {child.lastName}
