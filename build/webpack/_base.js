@@ -21,6 +21,7 @@ const webpackConfig = {
   plugins : [
     new webpack.DefinePlugin(config.get('globals')),
     new webpack.ProvidePlugin({
+      'Promise': 'es6-promise',
       'fetch': 'imports?this=>global!exports?global.fetch!whatwg-fetch'
     }),
     new webpack.optimize.OccurrenceOrderPlugin(),
