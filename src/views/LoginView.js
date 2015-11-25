@@ -4,6 +4,8 @@ import { connect } from 'react-redux';
 import reactMixin from 'react-mixin';
 import * as actionCreators from '../actions';
 
+import 'styles/login.scss';
+
 export class LoginView extends React.Component {
   static propTypes = {
     location: React.PropTypes.object,
@@ -28,13 +30,15 @@ export class LoginView extends React.Component {
   }
 
   render() {
+    const statusText = this.props.statusText;
     return (
       <div className="Login Login--page">
-        <h1>Login</h1>
-        {this.props.statusText ? <div className="alert alert-info">{this.props.statusText}</div> : ''}
+        <h1 className="Title">Login</h1>
+        {statusText ? <div className="Message">{statusText}</div> : ''}
         <form role="form">
           <div className="Login-group">
-            <input type="text"
+            <input type="email"
+              autoFocus="autofocus"
               valueLink={this.linkState('email')}
               placeholder="Email" />
             </div>

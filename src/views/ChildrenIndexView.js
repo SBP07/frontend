@@ -2,10 +2,11 @@ import React from 'react';
 import {connect} from 'react-redux';
 import { bindActionCreators } from 'redux';
 import * as actionCreators from '../actions';
-import 'styles/children.scss';
 import {LoadingIcon} from '../components/LoadingIcon';
 import ChildrenSelector from '../components/ChildrenSelector';
 import ChildrenDetails from '../components/ChildrenDetails';
+
+import 'styles/children.scss';
 
 export class ChildrenIndexView extends React.Component {
   static propTypes = {

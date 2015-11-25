@@ -2,7 +2,7 @@ import { checkHttpStatus, parseJSON } from '../utils';
 import {LOGIN_USER_REQUEST, LOGIN_USER_FAILURE, LOGIN_USER_SUCCESS, LOGOUT_USER, FETCH_CHILDREN_DATA_REQUEST, RECEIVE_CHILDREN_DATA, CHILD_SELECTED, CHILD_CLEAR} from '../constants';
 import { pushState } from 'redux-router';
 
-const backendURL = 'http://backend.sbp07.il.ly';
+const backendURL = 'http://backend.speelsysteem.be';
 
 export function loginUserSuccess(token) {
   return {
