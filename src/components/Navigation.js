@@ -30,8 +30,8 @@ export class Navigation extends React.Component {
       <nav className="Navigation">
         <div className="container">
           <div className="Navigation-menu-left">
-            <Link to="/">
-              <i className="mdi mdi-home"></i>
+            <Link to="/" className="Navigation-logo">
+              <img src="/speellogo-white.png" width="auto" height="20px" />
             </Link>
             <Link to="/child">Children</Link>
           </div>

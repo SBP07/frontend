@@ -82,26 +82,45 @@ export class ChildrenSelector extends React.Component {
     return children.sort((a, b) => a.lastName.localeCompare(b.lastName));
   }
 
+  renderEmpty() {
+    return (
+      <div className="Children-sidebar">
+        {this.renderSearch()}
+        <div className="Children-list">
+          <div className="Children-empty-item">No Children...</div>
+        </div>
+      </div>
+    )
+  }
+
+  renderSearch() {
+    return (
+      <div className="Children-search">
+        <input
+          type="search"
+          className="Children-search-input"
+          valueLink={this.linkState('search')}
+          ref={(c) => this._input = c}
+          />
+        {
+          this.state.search.length === 0 ?
+          <i className="mdi mdi-magnify"></i>
+          : <i onClick={this.clearSearch.bind(this)} className="mdi mdi-close"></i>
+        }
+      </div>
+    );
+  }
+
   render() {
     const children = this.makeFilteredChildren();
     const selectedChildId = this.props.selectedChild ? this.props.selectedChild.id : null;
-
+    if (children.length === 0) {
+      return this.renderEmpty();
+    }
     return (
       <div className={selectedChildId ? 'Children-sidebar Child-selected'
         : 'Children-sidebar'}>
-        <div className="Children-search">
-          <input
-            type="search"
-            className="Children-search-input"
-            valueLink={this.linkState('search')}
-            ref={(c) => this._input = c}
-            />
-          {
-            this.state.search.length === 0 ?
-            <i className="mdi mdi-magnify"></i>
-            : <i onClick={this.clearSearch.bind(this)} className="mdi mdi-close"></i>
-          }
-        </div>
+        {this.renderSearch()}
         <div className="Children-list">
           {children.map( (child) =>
             <div

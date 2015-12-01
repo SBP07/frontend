@@ -2,6 +2,7 @@ import React from 'react/addons';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 import reactMixin from 'react-mixin';
+import {LoadingIcon} from '../components/LoadingIcon';
 import * as actionCreators from '../actions';
 
 import 'styles/login.scss';
@@ -50,7 +51,12 @@ export class LoginView extends React.Component {
           <button type="submit"
             className="Button Button--fluid"
             disabled={this.props.isAuthenticating}
-            onClick={this.login.bind(this)}>Log in</button>
+            onClick={this.login.bind(this)}>
+              {
+                this.props.isAuthenticating ?
+                <LoadingIcon size={20} /> : 'Log In'
+              }
+            </button>
       </form>
     </div>
     );

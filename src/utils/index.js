@@ -15,17 +15,14 @@ export function createReducer(initialState, reducerMap) {
   };
 }
 
-export function checkHttpStatus(response) {
-  let error;
-  if (response.status >= 200 && response.status < 300) {
-    return response;
-  } else {
-    error = new Error(response.statusText);
-    error.response = response;
-    throw error;
-  }
-}
-
-export function parseJSON(response) {
-  return response.json();
+export function parseResponse(response) {
+  return response.json().then( (json) => {
+    if (json.status === 'error' || response.status === 401) {
+      const error = new Error(json.message || response.statusText);
+      error.response = response;
+      throw error;
+    } else {
+      return json;
+    }
+  });
 }

@@ -45,7 +45,7 @@ export default createReducer(initialState, {
       'isAuthenticated': false,
       'token': null,
       'jwt': null,
-      'statusText': `Authentication Error: ${payload.status} ${payload.statusText}`
+      'statusText': `${payload.message}`
     });
   },
   [LOGOUT_USER]: (state) => {

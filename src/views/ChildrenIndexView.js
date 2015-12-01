@@ -39,9 +39,6 @@ export class ChildrenIndexView extends React.Component {
     if (this.props.isFetching === true) {
       return this.renderLoading();
     }
-    if (this.props.children.length === 0) {
-      return this.renderLoading();
-    }
     return (
       <div className="Children">
         <ChildrenSelector />

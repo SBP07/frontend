@@ -1,4 +1,4 @@
-import { checkHttpStatus, parseJSON } from '../utils';
+import { parseResponse } from '../utils';
 import {LOGIN_USER_REQUEST, LOGIN_USER_FAILURE, LOGIN_USER_SUCCESS, LOGOUT_USER, FETCH_CHILDREN_DATA_REQUEST, RECEIVE_CHILDREN_DATA, CHILD_SELECTED, CHILD_CLEAR} from '../constants';
 import { pushState } from 'redux-router';
 
@@ -18,7 +18,7 @@ export function loginUserFailure(error) {
     type: LOGIN_USER_FAILURE,
     payload: {
       status: error.response.status,
-      statusText: error.response.statusText
+      message: error.message
     }
   };
 }
@@ -58,8 +58,7 @@ export function loginUser(email, password) {
         rememberMe: true
       })
     })
-    .then(checkHttpStatus)
-    .then(parseJSON)
+    .then(parseResponse)
     .then(response => {
       const redirect = redirect || '/';
       dispatch(loginUserSuccess(response.token));
@@ -95,8 +94,7 @@ export function fetchChildrenData(token) {
         'X-Auth-Token': `${token}`
       }
     })
-    .then(checkHttpStatus)
-    .then(parseJSON)
+    .then(parseResponse)
     .then(children => {
       dispatch(receiveChildrenData(children));
     })
