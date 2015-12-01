@@ -6,7 +6,7 @@ export default class HomeView extends React.Component {
       <div className="container" style={{
         'textAlign': 'center'
       }}>
-        <img src="/speellogo.png" width="auto" height="50px" style={{
+        <img src={require('../speellogo.png')} width="auto" height="50px" style={{
           'margin': '10px'
         }} />
       </div>
