@@ -70,7 +70,7 @@ export function loginUser(email, password) {
       if (error.response) {
         dispatch(loginUserFailure(error));
       } else {
-        console.error(error);
+        throw error;
       }
     });
   };
@@ -101,16 +101,16 @@ export function fetchChildrenData(token) {
       }
     })
     .then(parseResponse)
-    .then(({json: children, token: token}) => {
+    .then(({json: children, token: newToken}) => {
       dispatch(receiveChildrenData(children));
-      dispatch(loginUserSuccess(token));
+      dispatch(loginUserSuccess(newToken));
     })
     .catch(error => {
       if (error.response && error.response.status === 401) {
         dispatch(loginUserFailure(error));
         dispatch(pushState(null, '/login'));
       } else {
-        console.error(error);
+        throw error;
       }
     });
   };
