@@ -1,9 +1,9 @@
 import 'babel-core/polyfill';
 import React from 'react';
 import ReactDOM from 'react-dom';
-import Root from './containers/Root';
+import Root from 'containers/Root';
 import configureStore from './store/configureStore';
-import {loginUserSuccess} from './actions';
+import {loginUserSuccess} from './actions/index.js';
 
 const target = document.getElementById('root');
 const store = configureStore(window.__INITIAL_STATE__);
@@ -16,5 +16,8 @@ const token = localStorage.getItem('token');
 if (token !== null) {
   store.dispatch(loginUserSuccess(token));
 }
+
+import injectTapEventPlugin from 'react-tap-event-plugin';
+injectTapEventPlugin();
 
 ReactDOM.render(node, target);

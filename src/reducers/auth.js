@@ -1,5 +1,5 @@
-import {createReducer} from '../utils';
-import {LOGIN_USER_REQUEST, LOGIN_USER_SUCCESS, LOGIN_USER_FAILURE, LOGOUT_USER} from '../constants';
+import {createReducer} from '../utils/index.js';
+import {LOGIN_USER_REQUEST, LOGIN_USER_SUCCESS, LOGIN_USER_FAILURE, LOGOUT_USER} from '../constants/index.js';
 import jwtDecode from 'jwt-decode';
 
 const initialState = {

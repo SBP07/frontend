@@ -22,7 +22,7 @@ export function parseResponse(response) {
       error.response = response;
       throw error;
     } else {
-      return json;
+      return {json: json, token: response.headers.get('X-Auth-Token')};
     }
   });
 }

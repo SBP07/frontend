@@ -1,5 +1,7 @@
-import { parseResponse } from '../utils';
-import {LOGIN_USER_REQUEST, LOGIN_USER_FAILURE, LOGIN_USER_SUCCESS, LOGOUT_USER, FETCH_CHILDREN_DATA_REQUEST, RECEIVE_CHILDREN_DATA, CHILD_SELECTED, CHILD_CLEAR} from '../constants';
+import { parseResponse } from '../utils/index.js';
+import {LOGIN_USER_REQUEST, LOGIN_USER_FAILURE, LOGIN_USER_SUCCESS,
+  LOGOUT_USER, FETCH_CHILDREN_DATA_REQUEST, RECEIVE_CHILDREN_DATA,
+  CHILD_SELECTED, CHILD_CLEAR, CHILD_ADD_BUTTON_CLICKED} from '../constants/index.js';
 import { pushState } from 'redux-router';
 
 const backendURL = 'http://backend.speelsysteem.be';
@@ -59,13 +61,17 @@ export function loginUser(email, password) {
       })
     })
     .then(parseResponse)
-    .then(response => {
+    .then(({json: json}) => {
       const redirect = redirect || '/';
-      dispatch(loginUserSuccess(response.token));
+      dispatch(loginUserSuccess(json.token));
       dispatch(pushState(null, redirect));
     })
     .catch(error => {
-      dispatch(loginUserFailure(error));
+      if (error.response) {
+        dispatch(loginUserFailure(error));
+      } else {
+        console.error(error);
+      }
     });
   };
 }
@@ -95,13 +101,16 @@ export function fetchChildrenData(token) {
       }
     })
     .then(parseResponse)
-    .then(children => {
+    .then(({json: children, token: token}) => {
       dispatch(receiveChildrenData(children));
+      dispatch(loginUserSuccess(token));
     })
     .catch(error => {
-      if (error.response.status === 401) {
+      if (error.response && error.response.status === 401) {
         dispatch(loginUserFailure(error));
         dispatch(pushState(null, '/login'));
+      } else {
+        console.error(error);
       }
     });
   };
@@ -117,5 +126,11 @@ export function childSelected(child) {
 export function clearSelectedChild() {
   return {
     type: CHILD_CLEAR
+  };
+}
+
+export function childAddButtonClicked() {
+  return {
+    type: CHILD_ADD_BUTTON_CLICKED
   };
 }

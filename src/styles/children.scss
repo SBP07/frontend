@@ -47,7 +47,7 @@
 
 .Children-list {
   background: #ececec;
-  height: calc(100% - 62px);
+  height: calc(100% - 62px - 40px);
   overflow-y: scroll;
 }
 .Children-list-item {
@@ -95,6 +95,11 @@
   margin: 0;
   font-weight: 100;
   margin-bottom: 50px;
+  input {
+    outline: none;
+    border: none;
+    font-family: $font-monospace;
+  }
 }
 .Child-section {
   padding: 10px 0;
@@ -107,8 +112,25 @@
   display: inline-block;
   width: 100px;
   color: rgba(0, 0, 0, .7);
+  vertical-align: top;
+  padding-top: 15px;
 }
 .Child-value {
   display: inline-block;
   color: black;
+}
+
+.Children-add {
+  padding: 11px;
+  cursor: pointer;
+  user-select: none;
+  &:hover, &:focus {
+    background: rgba(255, 255, 255, .1);
+  }
+  &:active {
+    background: rgba(0, 0, 0, .05);
+  }
+  .mdi {
+    float: right;
+  }
 }

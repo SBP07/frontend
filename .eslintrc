@@ -18,6 +18,7 @@
     "no-multi-spaces"  : 0,
     "quotes"           : [2, "single"],
     "jsx-quotes"       : [2],
-    "one-var"          : 0
+    "one-var"          : 0,
+    "react/jsx-boolean-value": 0
   }
 }

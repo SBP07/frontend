@@ -1,4 +1,4 @@
-import {createConstants} from '../utils';
+import {createConstants} from '../utils/index.js';
 
 export default createConstants(
  'LOGIN_USER_REQUEST',
@@ -8,5 +8,6 @@ export default createConstants(
  'FETCH_CHILDREN_DATA_REQUEST',
  'RECEIVE_CHILDREN_DATA',
  'CHILD_SELECTED',
- 'CHILD_CLEAR'
+ 'CHILD_CLEAR',
+ 'CHILD_ADD_BUTTON_CLICKED'
 );

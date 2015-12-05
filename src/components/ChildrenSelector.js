@@ -2,7 +2,7 @@ import React from 'react/addons';
 import {connect} from 'react-redux';
 import reactMixin from 'react-mixin';
 import { bindActionCreators } from 'redux';
-import * as actionCreators from '../actions';
+import * as actionCreators from '../actions/index.js';
 
 export class ChildrenSelector extends React.Component {
   static propTypes = {
@@ -90,7 +90,7 @@ export class ChildrenSelector extends React.Component {
           <div className="Children-empty-item">No Children...</div>
         </div>
       </div>
-    )
+    );
   }
 
   renderSearch() {
@@ -111,38 +111,49 @@ export class ChildrenSelector extends React.Component {
     );
   }
 
+  renderList() {
+    const children = this.makeFilteredChildren();
+    const selectedChildId = this.props.selectedChild ? this.props.selectedChild.id : null;
+
+    return (
+      <div className="Children-list">
+        {children.map( (child) =>
+          <div
+            key={child.id}
+            ref={child.id}
+            className={
+              selectedChildId === child.id ?
+              'Children-list-item Children-list-item--highlighted'
+              : 'Children-list-item'
+            }
+            tabIndex={children.indexOf(child) + 1}
+            onClick={this.onClickChild(child).bind(this)}
+            onKeyUp={this.onKeyPress(child).bind(this)}
+            >
+            {child.firstName} <b>{child.lastName}</b>
+            {
+              selectedChildId === child.id ?
+              <strong>•</strong> : ''
+            }
+          </div>
+        )}
+      </div>
+    );
+  }
+
   render() {
     const children = this.makeFilteredChildren();
     const selectedChildId = this.props.selectedChild ? this.props.selectedChild.id : null;
+
     if (children.length === 0) {
       return this.renderEmpty();
     }
+
     return (
       <div className={selectedChildId ? 'Children-sidebar Child-selected'
         : 'Children-sidebar'}>
         {this.renderSearch()}
-        <div className="Children-list">
-          {children.map( (child) =>
-            <div
-              key={child.id}
-              ref={child.id}
-              className={
-                selectedChildId === child.id ?
-                'Children-list-item Children-list-item--highlighted'
-                : 'Children-list-item'
-              }
-              tabIndex={children.indexOf(child) + 1}
-              onClick={this.onClickChild(child).bind(this)}
-              onKeyUp={this.onKeyPress(child).bind(this)}
-              >
-              {child.firstName} <b>{child.lastName}</b>
-              {
-                selectedChildId === child.id ?
-                <strong>•</strong> : ''
-              }
-            </div>
-          )}
-        </div>
+        {this.renderList()}
       </div>
     );
   }

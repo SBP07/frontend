@@ -2,8 +2,7 @@ import React from 'react/addons';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 import reactMixin from 'react-mixin';
-import {LoadingIcon} from '../components/LoadingIcon';
-import * as actionCreators from '../actions';
+import * as actionCreators from '../actions/index.js';
 
 import 'styles/login.scss';
 
@@ -54,7 +53,7 @@ export class LoginView extends React.Component {
             onClick={this.login.bind(this)}>
               {
                 this.props.isAuthenticating ?
-                <LoadingIcon size={20} /> : 'Log In'
+                'Logging in...' : 'Log In'
               }
             </button>
       </form>

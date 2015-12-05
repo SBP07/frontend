@@ -1,7 +1,7 @@
 import React from 'react';
 import {connect} from 'react-redux';
 import { bindActionCreators } from 'redux';
-import * as actionCreators from '../actions';
+import * as actionCreators from '../actions/index.js';
 
 export class ChildrenDetails extends React.Component {
   static propTypes = {
