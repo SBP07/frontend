@@ -1,5 +1,3 @@
-import {createConstants} from '../utils/index.js';
-
 export const LOGIN_USER_REQUEST = 'LOGIN_USER_REQUEST';
 export const LOGIN_USER_FAILURE = 'LOGIN_USER_FAILURE';
 export const LOGIN_USER_SUCCESS = 'LOGIN_USER_SUCCESS';
@@ -9,3 +7,5 @@ export const RECEIVE_CHILDREN_DATA = 'RECEIVE_CHILDREN_DATA';
 export const CHILD_SELECTED = 'CHILD_SELECTED';
 export const CHILD_CLEAR = 'CHILD_CLEAR';
 export const CHILD_ADD_BUTTON_CLICKED = 'CHILD_ADD_BUTTON_CLICKED';
+export const SAVE_CHILD_REQUEST = 'SAVE_CHILD_REQUEST';
+export const SAVE_CHILD_SUCCESS = 'SAVE_CHILD_SUCCESS';

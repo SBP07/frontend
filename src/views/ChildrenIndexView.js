@@ -14,6 +14,7 @@ import 'styles/children.scss';
 export class ChildrenIndexView extends React.Component {
   static propTypes = {
     isFetching: React.PropTypes.bool,
+    selectedChild: React.PropTypes.object,
     children: React.PropTypes.array,
     token: React.PropTypes.string,
     actions: React.PropTypes.object,
@@ -63,7 +64,8 @@ export class ChildrenIndexView extends React.Component {
             position: 'absolute',
             right: 100,
             bottom: 20,
-            fontSize: 24
+            fontSize: 24,
+            display: this.props.selectedChild ? 'block' : 'none'
           }}
           onTouchTap={this.props.actions.childAddButtonClicked}
         >
@@ -78,7 +80,8 @@ const mapStateToProps = (state) => ({
   children: state.children.data,
   isFetching: state.children.isFetching,
   token: state.auth.token,
-  editMode: state.children.editMode
+  editMode: state.children.editMode,
+  selectedChild: state.children.selected
 });
 
 const mapDispatchToProps = (dispatch) => ({

@@ -1,7 +1,9 @@
 import { parseResponse } from '../utils/index.js';
 import {LOGIN_USER_REQUEST, LOGIN_USER_FAILURE, LOGIN_USER_SUCCESS,
   LOGOUT_USER, FETCH_CHILDREN_DATA_REQUEST, RECEIVE_CHILDREN_DATA,
-  CHILD_SELECTED, CHILD_CLEAR, CHILD_ADD_BUTTON_CLICKED} from '../constants/index.js';
+  CHILD_SELECTED, CHILD_CLEAR, CHILD_ADD_BUTTON_CLICKED, SAVE_CHILD_REQUEST,
+  SAVE_CHILD_SUCCESS}
+  from '../constants/index.js';
 import { pushState } from 'redux-router';
 
 const backendURL = 'http://backend.speelsysteem.be';
@@ -67,7 +69,7 @@ export function loginUser(email, password) {
       dispatch(pushState(null, redirect));
     })
     .catch(error => {
-      if (error.response) {
+      if (error.response && error.response.status === 401) {
         dispatch(loginUserFailure(error));
       } else {
         throw error;
@@ -133,4 +135,46 @@ export function childAddButtonClicked() {
   return {
     type: CHILD_ADD_BUTTON_CLICKED
   };
+}
+
+export function saveChildRequest() {
+  return {
+    type: SAVE_CHILD_REQUEST
+  };
+}
+
+export function saveChildSuccess(child) {
+  return {
+    type: SAVE_CHILD_SUCCESS,
+    payload: {
+      child: child
+    }
+  };
+}
+
+export function saveChild(token, childData) {
+  return function(dispatch) {
+    dispatch(saveChildRequest());
+    return fetch(`${backendURL}/api/v0/child`, {
+      method: 'post',
+      credentials: 'include',
+      headers: {
+        'Accept': 'application/json',
+        'Content-Type': 'application/json',
+        'X-Auth-Token': `${token}`
+      },
+      body: JSON.stringify(childData)
+    })
+      .then(parseResponse)
+      .then(({json: json, token: newToken}) => {
+        dispatch(saveChildSuccess(newToken));
+      })
+      .catch(error => {
+        if (error.response && error.response.status === 401) {
+          dispatch(loginUserFailure(error));
+        } else {
+          throw error;
+        }
+      });
+  }
 }

@@ -1,5 +1,6 @@
 import {createReducer} from '../utils/index.js';
-import {RECEIVE_CHILDREN_DATA, FETCH_CHILDREN_DATA_REQUEST, CHILD_SELECTED, CHILD_CLEAR, CHILD_ADD_BUTTON_CLICKED} from '../constants/index.js';
+import {RECEIVE_CHILDREN_DATA, FETCH_CHILDREN_DATA_REQUEST, CHILD_SELECTED, CHILD_CLEAR, CHILD_ADD_BUTTON_CLICKED,
+  SAVE_CHILD_REQUEST, SAVE_CHILD_SUCCESS} from '../constants/index.js';
 
 const initialState = {
   data: [],
@@ -41,5 +42,17 @@ export default createReducer(initialState, {
       'editMode': true,
       'selected': null
     });
-  }
+  },
+  [SAVE_CHILD_REQUEST]: (state) => {
+    return Object.assign({}, state, {
+      'isSaving': true
+    });
+  },
+  [SAVE_CHILD_SUCCESS]: (state, payload) => {
+    return Object.assign({}, state, {
+      'isSaving': false,
+      'selected': payload.child,
+      'editMode': false
+    });
+  },
 });

@@ -4,18 +4,15 @@ import {connect} from 'react-redux';
 import { bindActionCreators } from 'redux';
 import * as actionCreators from '../actions/index.js';
 
-import TextField from 'material-ui/lib/text-field';
 import DatePicker from 'material-ui/lib/date-picker/date-picker';
-import SelectField from 'material-ui/lib/select-field';
-import AutoComplete from 'material-ui/lib/auto-complete';
 import RaisedButton from 'material-ui/lib/raised-button';
-import zipCodes from '../constants/zip-be';
 
 
 export class ChildrenEditor extends React.Component {
   static propTypes = {
     selectedChild: React.PropTypes.object,
-    actions: React.PropTypes.object
+    actions: React.PropTypes.object,
+    token: React.PropTypes.string
   }
 
   constructor(props) {
@@ -24,21 +21,12 @@ export class ChildrenEditor extends React.Component {
     this.state = Object.assign({
       firstName: '',
       lastName: '',
-      birthday: new Date(),
-      street: '',
-      number: '',
-      zipCode: '',
-      city: '',
-      country: 'Belgium'
+      birthday: new Date()
     }, this.props.selectedChild);
   }
 
-  goBack() {
-    this.props.actions.clearSelectedChild();
-  }
-
-  handleBirthdayChange(arg, birthday) {
-    console.log(birthday);
+  onSave() {
+    this.props.actions.saveChild(this.props.token, this.state);
   }
 
   doNothing() {
@@ -89,17 +77,11 @@ export class ChildrenEditor extends React.Component {
       ──███────────────────────────────────*/
   }
 
-  onSave() {
-    console.log(this.state);
+  goBack() {
+    this.props.actions.clearSelectedChild();
   }
 
   render() {
-    let matchedCities = [];
-    if (this.state.zipCode.length > 0) {
-      matchedCities =
-        zipCodes.filter((obj) => obj.zip === this.state.zipCode);
-    }
-
     return (
       <div className="Children-main" >
         <div className="Mobile NavBar">
@@ -138,51 +120,8 @@ export class ChildrenEditor extends React.Component {
           </div>
 
           <div className="Child-section">
-            <span className="Child-label">address</span>
-            <span className="Child-value">
-              <TextField
-                hintText="Street"
-                fullWidth={true}
-                valueLink={this.linkState('street')}
-                />
-
-              <div>
-                <TextField
-                  hintText="Zip"
-                  valueLink={this.linkState('zipCode')}
-                  />
-                <AutoComplete
-                  hintText="City"
-                  dataSource={matchedCities.map(obj => obj.city)}
-                  />
-              </div>
-                <SelectField
-                  style={{marginTop: 24}}
-                  hintText="Country"
-                  fullWidth={true}
-                  valueLink={this.linkState('country')}
-                  valueMember="text"
-                  displayMember="text"
-                  menuItems={[
-                    {
-                      payload: 1,
-                      text: 'Belgium'
-                    },
-                    {
-                      payload: 2,
-                      text: 'Netherlands'
-                    },
-                    {
-                      payload: 3,
-                      text: 'Germany'
-                    }
-                  ]} />
-            </span>
-          </div>
-
-          <div className="Child-section">
             <RaisedButton
-              label="Primary"
+              label="Save"
               primary={true}
               onTouchTap={this.onSave.bind(this)} />
           </div>
@@ -196,7 +135,8 @@ export class ChildrenEditor extends React.Component {
 reactMixin(ChildrenEditor.prototype, React.addons.LinkedStateMixin);
 
 const mapStateToProps = (state) => ({
-  selectedChild: state.children.selected
+  selectedChild: state.children.selected,
+  token: state.auth.token,
 });
 
 const mapDispatchToProps = (dispatch) => ({
