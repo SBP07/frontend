@@ -2,7 +2,7 @@ import { parseResponse } from '../utils/index.js';
 import {LOGIN_USER_REQUEST, LOGIN_USER_FAILURE, LOGIN_USER_SUCCESS,
   LOGOUT_USER, FETCH_CHILDREN_DATA_REQUEST, RECEIVE_CHILDREN_DATA,
   CHILD_SELECTED, CHILD_CLEAR, CHILD_ADD_BUTTON_CLICKED, SAVE_CHILD_REQUEST,
-  SAVE_CHILD_SUCCESS}
+  SAVE_CHILD_SUCCESS, SAVE_CHILD_CANCEL, SAVE_CHILD_FAILURE}
   from '../constants/index.js';
 import { pushState } from 'redux-router';
 
@@ -152,6 +152,19 @@ export function saveChildSuccess(child) {
   };
 }
 
+export function cancelSaveChild() {
+  return {
+    type: SAVE_CHILD_CANCEL
+  };
+}
+
+export function saveChildFailure(error) {
+  return {
+    type: SAVE_CHILD_FAILURE,
+    payload: error
+  };
+}
+
 export function saveChild(token, childData) {
   return function(dispatch) {
     dispatch(saveChildRequest());
@@ -167,14 +180,16 @@ export function saveChild(token, childData) {
     })
       .then(parseResponse)
       .then(({json: json, token: newToken}) => {
-        dispatch(saveChildSuccess(newToken));
+        dispatch(saveChildSuccess(json));
+        dispatch(loginUserSuccess(newToken));
       })
       .catch(error => {
         if (error.response && error.response.status === 401) {
           dispatch(loginUserFailure(error));
         } else {
+          dispatch(saveChildFailure(error.json));
           throw error;
         }
       });
-  }
+  };
 }

@@ -1,0 +1,26 @@
+@import 'base';
+
+.Form-section {
+  padding: 10px 0;
+  border-bottom: 1px dashed rgba(0, 0, 0, .1);
+  &:last-child {
+    border-bottom: none;
+  }
+}
+.Form-label {
+  display: inline-block;
+  width: 100px;
+  color: rgba(0, 0, 0, .7);
+}
+.Form-value {
+  display: inline-block;
+  color: black;
+}
+.Form-message {
+  padding: 10px;
+  &.Form-message--error {
+    background: rgba(255, 0, 0, .1);
+    border: 1px dashed rgba(255, 0, 0, .1);
+    color: rgba(255, 0, 0, .9);
+  }
+}

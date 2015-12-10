@@ -1,12 +1,15 @@
 import {createReducer} from '../utils/index.js';
-import {RECEIVE_CHILDREN_DATA, FETCH_CHILDREN_DATA_REQUEST, CHILD_SELECTED, CHILD_CLEAR, CHILD_ADD_BUTTON_CLICKED,
-  SAVE_CHILD_REQUEST, SAVE_CHILD_SUCCESS} from '../constants/index.js';
+import {RECEIVE_CHILDREN_DATA, FETCH_CHILDREN_DATA_REQUEST, CHILD_SELECTED,
+  CHILD_CLEAR, CHILD_ADD_BUTTON_CLICKED, SAVE_CHILD_REQUEST,
+  SAVE_CHILD_SUCCESS, SAVE_CHILD_CANCEL,
+  SAVE_CHILD_FAILURE} from '../constants/index.js';
 
 const initialState = {
   data: [],
   selected: null,
   isFetching: false,
-  editMode: false
+  editMode: false,
+  addMode: false
 };
 
 export default createReducer(initialState, {
@@ -39,20 +42,35 @@ export default createReducer(initialState, {
   },
   [CHILD_ADD_BUTTON_CLICKED]: (state) => {
     return Object.assign({}, state, {
-      'editMode': true,
-      'selected': null
+      'addMode': true,
+      'isSaving': false,
+      'saveError': null
     });
   },
   [SAVE_CHILD_REQUEST]: (state) => {
     return Object.assign({}, state, {
-      'isSaving': true
+      'isSaving': true,
+      'saveError': null
     });
   },
   [SAVE_CHILD_SUCCESS]: (state, payload) => {
     return Object.assign({}, state, {
       'isSaving': false,
       'selected': payload.child,
-      'editMode': false
+      'editMode': false,
+      'saveError': null
     });
   },
+  [SAVE_CHILD_CANCEL]: (state) => {
+    return Object.assign({}, state, {
+      'addMode': false,
+      'isSaving': false
+    });
+  },
+  [SAVE_CHILD_FAILURE]: (state, payload) => {
+    return Object.assign({}, state, {
+      'isSaving': false,
+      'saveError': payload.message
+    });
+  }
 });

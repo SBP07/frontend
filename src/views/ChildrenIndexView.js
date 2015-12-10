@@ -5,6 +5,7 @@ import * as actionCreators from '../actions/index.js';
 import ChildrenSelector from '../components/ChildrenSelector';
 import ChildrenDetails from '../components/ChildrenDetails';
 import ChildrenEditor from '../components/ChildrenEditor';
+import ChildrenAdder from '../components/ChildrenAdder';
 
 import FloatingActionButton from 'material-ui/lib/floating-action-button';
 import RefreshIndicator from 'material-ui/lib/refresh-indicator';
@@ -18,7 +19,8 @@ export class ChildrenIndexView extends React.Component {
     children: React.PropTypes.array,
     token: React.PropTypes.string,
     actions: React.PropTypes.object,
-    editMode: React.PropTypes.bool
+    editMode: React.PropTypes.bool,
+    addMode: React.PropTypes.bool
   }
 
   componentWillMount() {
@@ -47,6 +49,7 @@ export class ChildrenIndexView extends React.Component {
           <ChildrenEditor />
           : <ChildrenDetails />
         }
+        <ChildrenAdder />
         <FloatingActionButton
           style={{
             position: 'absolute',
@@ -81,6 +84,7 @@ const mapStateToProps = (state) => ({
   isFetching: state.children.isFetching,
   token: state.auth.token,
   editMode: state.children.editMode,
+  addMode: state.children.addMode,
   selectedChild: state.children.selected
 });
 

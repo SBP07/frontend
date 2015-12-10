@@ -4,7 +4,7 @@ import {connect} from 'react-redux';
 import { bindActionCreators } from 'redux';
 import * as actionCreators from '../actions/index.js';
 
-import DatePicker from 'material-ui/lib/date-picker/date-picker';
+import TextField from 'material-ui/lib/text-field';
 import RaisedButton from 'material-ui/lib/raised-button';
 
 
@@ -21,7 +21,7 @@ export class ChildrenEditor extends React.Component {
     this.state = Object.assign({
       firstName: '',
       lastName: '',
-      birthday: new Date()
+      birthDate: new Date()
     }, this.props.selectedChild);
   }
 
@@ -92,37 +92,51 @@ export class ChildrenEditor extends React.Component {
         </div>
 
         <div className="ChildDetails">
-          <h2 className="Child-name">
-            <input type="text"
-              autoFocus="autofocus"
-              placeholder="First"
-              size={this.state.firstName.length}
-              valueLink={this.linkState('firstName')} />
-            <input type="text"
-              placeholder="Last"
-              size={this.state.lastName.length}
-              valueLink={this.linkState('lastName')} />
-          </h2>
-
           <div className="Child-section">
-            <span className="Child-label">birthday</span>
+            <span className="Child-label">name</span>
             <span className="Child-value">
-              <DatePicker
-                hintText="Landscape Dialog"
-                value={this.state.birthday}
-                maxDate={new Date()}
-                mode="landscape"
-                valueLink={this.linkState('birthday')}
-                onShow={this.doNothing}
-                onDismiss={this.doNothing}
+              <TextField
+                hintText="First Name"
+                floatingLabelText="First Name"
+                valueLink={this.linkState('firstName')}
+                />
+              <TextField
+                hintText="Last Name"
+                floatingLabelText="Last Name"
+                valueLink={this.linkState('lastName')}
                 />
             </span>
           </div>
 
           <div className="Child-section">
+            <span className="Child-label">birthday</span>
+            <span className="Child-value">
+              <TextField
+                hintText="Day"
+                floatingLabelText="Day"
+                style={{width: 50}}
+                valueLink={this.linkState('day')}
+                />
+              <TextField
+                hintText="Month"
+                floatingLabelText="Month"
+                style={{width: 60}}
+                valueLink={this.linkState('month')}
+                />
+              <TextField
+                hintText="Year"
+                floatingLabelText="Year"
+                style={{width: 60}}
+                valueLink={this.linkState('year')}
+                />
+            </span>
+          </div>
+
+          <div className="Child-section">
+
             <RaisedButton
-              label="Save"
               primary={true}
+              label="Save"
               onTouchTap={this.onSave.bind(this)} />
           </div>
         </div>
@@ -136,7 +150,7 @@ reactMixin(ChildrenEditor.prototype, React.addons.LinkedStateMixin);
 
 const mapStateToProps = (state) => ({
   selectedChild: state.children.selected,
-  token: state.auth.token,
+  token: state.auth.token
 });
 
 const mapDispatchToProps = (dispatch) => ({

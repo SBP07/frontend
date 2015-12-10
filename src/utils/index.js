@@ -13,6 +13,7 @@ export function parseResponse(response) {
     if (json.status === 'error' || response.status === 401) {
       const error = new Error(json.message || response.statusText);
       error.response = response;
+      error.json = json;
       throw error;
     } else {
       return {json: json, token: response.headers.get('X-Auth-Token')};

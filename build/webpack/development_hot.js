@@ -1,6 +1,7 @@
 import webpack       from 'webpack';
 import config        from '../../config';
 import webpackConfig from './development';
+import BrowserSyncPlugin from 'browser-sync-webpack-plugin';
 
 webpackConfig.entry.app.push(
   `webpack-dev-server/client?${config.get('webpack_public_path')}`,
@@ -9,7 +10,12 @@ webpackConfig.entry.app.push(
 
 webpackConfig.plugins.push(
   new webpack.HotModuleReplacementPlugin(),
-  new webpack.NoErrorsPlugin()
+  new webpack.NoErrorsPlugin(),
+  new BrowserSyncPlugin({
+    host: 'localhost',
+    port: 3001,
+    proxy: 'http://localhost:3000/'
+  })
 );
 
 // We need to apply the react-transform HMR plugin to the Babel configuration,
