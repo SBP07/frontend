@@ -6,6 +6,7 @@ import * as actionCreators from '../actions/index.js';
 
 import TextField from 'material-ui/lib/text-field';
 import Dialog from 'material-ui/lib/dialog';
+import { pad } from '../utils/index.js';
 
 export class ChildrenAdder extends React.Component {
   static propTypes = {
@@ -20,10 +21,13 @@ export class ChildrenAdder extends React.Component {
   constructor(props) {
     super(props);
 
-    this.state = Object.assign({
+    this.state = {
       firstName: '',
-      lastName: ''
-    }, this.props.selectedChild);
+      lastName: '',
+      day: '',
+      month: '',
+      year: ''
+    };
   }
 
   onDialogCancel() {
@@ -35,14 +39,15 @@ export class ChildrenAdder extends React.Component {
     if (this.props.isSaving === true) return;
     if (this.verify()) {
       let {day, month, year} = this.state;
-      day = parseInt(day, 10);
-      month = parseInt(month, 10) - 1;
+      day = pad(parseInt(day, 10));
+      month = pad(parseInt(month, 10));
       year = parseInt(year, 10);
 
       const child = {
         firstName: this.state.firstName,
         lastName: this.state.lastName,
-        birthDate: `${year}-${month}-${day}`
+        birthDate: `${year}-${month}-${day}`,
+        tenantCanonicalName: SPEELDATABASE
       };
       this.props.actions.saveChild(this.props.token, child);
     }

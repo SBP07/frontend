@@ -61,6 +61,7 @@ config.set('globals', {
   'process.env'  : {
     'NODE_ENV' : JSON.stringify(config.get('env'))
   },
+  'SPEELDATABASE': JSON.stringify(process.env.SPEELDATABASE),
   'NODE_ENV'     : config.get('env'),
   '__DEV__'      : config.get('env') === 'development',
   '__PROD__'     : config.get('env') === 'production',

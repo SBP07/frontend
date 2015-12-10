@@ -41,13 +41,6 @@ export class ChildrenDetails extends React.Component {
             <span className="Child-label">birthday</span>
             <span className="Child-value">{new Date(child.birthDate).toDateString()}</span>
           </div>
-          <div className="Child-section">
-            <span className="Child-label">address</span>
-            <span className="Child-value">
-              {child.address.street} {child.address.number}, <br />
-              {child.address.zipCode} {child.address.city}
-            </span>
-          </div>
         </div>
       </div>
     );

@@ -6,6 +6,7 @@ import ChildrenSelector from '../components/ChildrenSelector';
 import ChildrenDetails from '../components/ChildrenDetails';
 import ChildrenEditor from '../components/ChildrenEditor';
 import ChildrenAdder from '../components/ChildrenAdder';
+import ChildrenDestroyer from '../components/ChildrenDestroyer';
 
 import FloatingActionButton from 'material-ui/lib/floating-action-button';
 import RefreshIndicator from 'material-ui/lib/refresh-indicator';
@@ -34,6 +35,53 @@ export class ChildrenIndexView extends React.Component {
     }
   }
 
+  renderActions() {
+    return (
+      <div>
+        <FloatingActionButton
+          backgroundColor="#212121"
+          style={{
+            position: 'absolute',
+            right: 30,
+            bottom: 20,
+            fontSize: 24
+          }}
+          onTouchTap={this.props.actions.childAddButtonClicked}
+        >
+          <i className="mdi mdi-plus"></i>
+        </FloatingActionButton>
+
+        <FloatingActionButton
+          backgroundColor="#039BE5"
+          style={{
+            position: 'absolute',
+            right: 100,
+            bottom: 20,
+            fontSize: 24,
+            display: this.props.selectedChild ? 'block' : 'none'
+          }}
+          onTouchTap={this.props.actions.childEditButtonClicked}
+        >
+          <i className="mdi mdi-pencil"></i>
+        </FloatingActionButton>
+
+        <FloatingActionButton
+          backgroundColor="#DD2C00"
+          style={{
+            position: 'absolute',
+            right: 170,
+            bottom: 20,
+            fontSize: 24,
+            display: this.props.selectedChild ? 'block' : 'none'
+          }}
+          onTouchTap={this.props.actions.childDeleteButtonClicked}
+        >
+          <i className="mdi mdi-delete"></i>
+        </FloatingActionButton>
+      </div>
+    );
+  }
+
   render() {
     return (
       <div className="Children">
@@ -49,31 +97,13 @@ export class ChildrenIndexView extends React.Component {
           <ChildrenEditor />
           : <ChildrenDetails />
         }
-        <ChildrenAdder />
-        <FloatingActionButton
-          style={{
-            position: 'absolute',
-            right: 30,
-            bottom: 20,
-            fontSize: 24
-          }}
-          onTouchTap={this.props.actions.childAddButtonClicked}
-        >
-          <i className="mdi mdi-plus"></i>
-        </FloatingActionButton>
 
-        <FloatingActionButton
-          style={{
-            position: 'absolute',
-            right: 100,
-            bottom: 20,
-            fontSize: 24,
-            display: this.props.selectedChild ? 'block' : 'none'
-          }}
-          onTouchTap={this.props.actions.childAddButtonClicked}
-        >
-          <i className="mdi mdi-pencil"></i>
-        </FloatingActionButton>
+        <ChildrenAdder />
+        {
+          this.props.selectedChild ?
+          <ChildrenDestroyer /> : ''
+        }
+        {this.renderActions()}
       </div>
     );
   }

@@ -1,8 +1,10 @@
 import { parseResponse } from '../utils/index.js';
 import {LOGIN_USER_REQUEST, LOGIN_USER_FAILURE, LOGIN_USER_SUCCESS,
   LOGOUT_USER, FETCH_CHILDREN_DATA_REQUEST, RECEIVE_CHILDREN_DATA,
-  CHILD_SELECTED, CHILD_CLEAR, CHILD_ADD_BUTTON_CLICKED, SAVE_CHILD_REQUEST,
-  SAVE_CHILD_SUCCESS, SAVE_CHILD_CANCEL, SAVE_CHILD_FAILURE}
+  CHILD_SELECTED, CHILD_CLEAR, SAVE_CHILD_REQUEST,
+  SAVE_CHILD_SUCCESS, SAVE_CHILD_CANCEL, SAVE_CHILD_FAILURE,
+  CHILD_ADD_BUTTON_CLICKED, CHILD_EDIT_BUTTON_CLICKED, CHILD_DELETE_BUTTON_CLICKED,
+  DELETE_CHILD_REQUEST, DELETE_CHILD_SUCCESS, DELETE_CHILD_FAILURE}
   from '../constants/index.js';
 import { pushState } from 'redux-router';
 
@@ -137,6 +139,18 @@ export function childAddButtonClicked() {
   };
 }
 
+export function childEditButtonClicked() {
+  return {
+    type: CHILD_EDIT_BUTTON_CLICKED
+  };
+}
+
+export function childDeleteButtonClicked() {
+  return {
+    type: CHILD_DELETE_BUTTON_CLICKED
+  };
+}
+
 export function saveChildRequest() {
   return {
     type: SAVE_CHILD_REQUEST
@@ -169,7 +183,7 @@ export function saveChild(token, childData) {
   return function(dispatch) {
     dispatch(saveChildRequest());
     return fetch(`${backendURL}/api/v0/child`, {
-      method: 'post',
+      method: childData.id ? 'put' : 'post',
       credentials: 'include',
       headers: {
         'Accept': 'application/json',
@@ -182,12 +196,61 @@ export function saveChild(token, childData) {
       .then(({json: json, token: newToken}) => {
         dispatch(saveChildSuccess(json));
         dispatch(loginUserSuccess(newToken));
+        dispatch(fetchChildrenData(newToken));
       })
       .catch(error => {
         if (error.response && error.response.status === 401) {
           dispatch(loginUserFailure(error));
         } else {
           dispatch(saveChildFailure(error.json));
+          throw error;
+        }
+      });
+  };
+}
+
+export function deleteChildRequest() {
+  return {
+    type: DELETE_CHILD_REQUEST
+  };
+}
+
+export function deleteChildSuccess() {
+  return {
+    type: DELETE_CHILD_SUCCESS
+  };
+}
+
+export function deleteChildFailure(error) {
+  return {
+    type: DELETE_CHILD_FAILURE,
+    payload: error
+  };
+}
+
+export function deleteChild(token, childData) {
+  return function(dispatch) {
+    dispatch(deleteChildRequest());
+    return fetch(`${backendURL}/api/v0/child`, {
+      method: 'delete',
+      credentials: 'include',
+      headers: {
+        'Accept': 'application/json',
+        'Content-Type': 'application/json',
+        'X-Auth-Token': `${token}`
+      },
+      body: JSON.stringify(childData)
+    })
+      .then(parseResponse)
+      .then(({json: json, token: newToken}) => {
+        dispatch(deleteChildSuccess(json));
+        dispatch(loginUserSuccess(newToken));
+      })
+      .catch(error => {
+        if (error.response && error.response.status === 401) {
+          dispatch(loginUserFailure(error));
+        } else {
+          dispatch(deleteChildFailure(error.json));
           throw error;
         }
       });
