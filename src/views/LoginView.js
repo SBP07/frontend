@@ -2,7 +2,7 @@ import React from 'react/addons';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 import reactMixin from 'react-mixin';
-import * as actionCreators from '../actions/index.js';
+import actionCreators from '../actions';
 
 import 'styles/login.scss';
 

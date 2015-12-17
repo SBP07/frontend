@@ -1,7 +1,8 @@
-import React                    from 'react';
-import { Provider }             from 'react-redux';
-import routes                   from '../routes';
-import { ReduxRouter }          from 'redux-router';
+import React from 'react';
+import { Provider } from 'react-redux';
+import { Router } from 'react-router';
+import routes from '../routes';
+import {history} from '../store/configureStore';
 
 export default class Root extends React.Component {
   static propTypes = {
@@ -10,15 +11,11 @@ export default class Root extends React.Component {
 
   render() {
     return (
-      <div>
-        <Provider store={this.props.store}>
-          <div>
-            <ReduxRouter>
-              {routes}
-            </ReduxRouter>
-          </div>
-        </Provider>
-      </div>
+      <Provider store={this.props.store}>
+        <Router history={history}>
+          {routes}
+        </Router>
+      </Provider>
     );
   }
 }

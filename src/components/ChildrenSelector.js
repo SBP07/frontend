@@ -2,13 +2,19 @@ import React from 'react/addons';
 import {connect} from 'react-redux';
 import reactMixin from 'react-mixin';
 import { bindActionCreators } from 'redux';
-import * as actionCreators from '../actions/index.js';
+import actionCreators from '../actions';
+import KeyCode from '../utils/key-code';
+
+import { Link } from 'react-router';
 
 export class ChildrenSelector extends React.Component {
   static propTypes = {
     children: React.PropTypes.array,
     selectedChild: React.PropTypes.object,
-    actions: React.PropTypes.object
+    actions: React.PropTypes.object,
+    token: React.PropTypes.string,
+    path: React.PropTypes.string,
+    params: React.PropTypes.object
   }
 
   constructor(props) {
@@ -18,24 +24,51 @@ export class ChildrenSelector extends React.Component {
     };
   }
 
+  componentWillMount() {
+    this.fetchData();
+    this.props.actions.clearSelectedChild();
+  }
+
   componentDidMount() {
     this.clearSearch();
   }
 
-  onClickChild(child) {
-    return () => this.selectChild(child);
+  componentWillReceiveProps(props) {
+    const {children, path, params: {id}} = props;
+    if (path !== '/child' && id) {
+      if (children.length === 0) return;
+      this.props.actions.childSelected(
+        this.props.children.filter((c) => c.id === id)[0]
+      );
+      this.setState({
+        search: ''
+      });
+    } else {
+      this.props.actions.clearSelectedChild();
+    }
   }
 
   onKeyPress(child) {
     return (e) => {
-      if (e.key === 'Enter') {
+      if (e.keyCode === KeyCode.ENTER) {
         this.selectChild(child);
-      } else if (e.key === 'ArrowDown') {
+      } else if (e.keyCode === KeyCode.DOWN) {
         this.selectNextChild('down', child);
-      } else if (e.key === 'ArrowUp') {
+      } else if (e.keyCode === KeyCode.UP) {
         this.selectNextChild('up', child);
       }
     };
+  }
+
+  fetchData() {
+    const token = this.props.token;
+    if (this.props.children.length === 0) {
+      this.props.actions.fetchChildrenData(token);
+    }
+    /*
+    if (this.props.contactpersons.length === 0) {
+      this.props.actions.fetchContactPersons(token);
+    }*/
   }
 
   selectNextChild(direction, focusedChild) {
@@ -54,10 +87,11 @@ export class ChildrenSelector extends React.Component {
   }
 
   selectChild(child) {
+    if (this.props.selectedChild === child) return;
     this.setState({
       search: ''
     });
-    this.props.actions.childSelected(child);
+    this.props.actions.childClicked(child);
     this.refs[child.id].focus();
   }
 
@@ -118,7 +152,7 @@ export class ChildrenSelector extends React.Component {
     return (
       <div className="Children-list">
         {children.map( (child) =>
-          <div
+          <Link
             key={child.id}
             ref={child.id}
             className={
@@ -126,8 +160,8 @@ export class ChildrenSelector extends React.Component {
               'Children-list-item Children-list-item--highlighted'
               : 'Children-list-item'
             }
+            to={'/child/' + child.id}
             tabIndex={children.indexOf(child) + 1}
-            onClick={this.onClickChild(child).bind(this)}
             onKeyUp={this.onKeyPress(child).bind(this)}
             >
             {child.firstName} <b>{child.lastName}</b>
@@ -135,7 +169,7 @@ export class ChildrenSelector extends React.Component {
               selectedChildId === child.id ?
               <strong>•</strong> : ''
             }
-          </div>
+          </Link>
         )}
       </div>
     );
@@ -163,7 +197,9 @@ reactMixin(ChildrenSelector.prototype, React.addons.LinkedStateMixin);
 
 const mapStateToProps = (state) => ({
   children: state.children.data,
-  selectedChild: state.children.selected
+  token: state.auth.token,
+  selectedChild: state.children.selected,
+  path: state.routing.path
 });
 
 const mapDispatchToProps = (dispatch) => ({

@@ -1,3 +1,6 @@
 export HomeView from './HomeView';
 export LoginView from './LoginView';
-export ChildrenIndexView from './ChildrenIndexView';
+
+export ChildDetails from './ChildDetails';
+export ChildEdit from './ChildEdit';
+export NoChild from './NoChild';

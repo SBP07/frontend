@@ -2,39 +2,31 @@ import React from 'react/addons';
 import reactMixin from 'react-mixin';
 import {connect} from 'react-redux';
 import { bindActionCreators } from 'redux';
-import * as actionCreators from '../actions/index.js';
+import actionCreators from '../actions';
 
 import { pad } from '../utils/index.js';
 import TextField from 'material-ui/lib/text-field';
-// import RaisedButton from 'material-ui/lib/raised-button';
 
 
-export class ChildrenEditor extends React.Component {
+export class ChildEdit extends React.Component {
   static propTypes = {
+    children: React.PropTypes.array,
     selectedChild: React.PropTypes.object,
     actions: React.PropTypes.object,
     token: React.PropTypes.string,
     isSaving: React.PropTypes.bool,
-    saveError: React.PropTypes.string
+    saveError: React.PropTypes.string,
+    path: React.PropTypes.string,
+    params: React.PropTypes.object
   }
 
   constructor(props) {
     super(props);
+    this.setChildData();
+  }
 
-    this.state = Object.assign({
-      firstName: '',
-      lastName: '',
-      birthDate: null
-    }, this.props.selectedChild);
-
-    const birthDate = new Date(this.state.birthDate);
-    if (!isNaN(birthDate)) {
-      Object.assign(this.state, {
-        month: pad(birthDate.getMonth() + 1),
-        day: pad(birthDate.getDate()),
-        year: birthDate.getFullYear()
-      });
-    }
+  componentWillReceiveProps() {
+    this.setChildData();
   }
 
   onSave() {
@@ -53,6 +45,23 @@ export class ChildrenEditor extends React.Component {
         id: this.state.id
       };
       this.props.actions.saveChild(this.props.token, child);
+    }
+  }
+
+  setChildData() {
+    this.state = Object.assign({
+      firstName: '',
+      lastName: '',
+      birthDate: null
+    }, this.props.selectedChild);
+
+    const birthDate = new Date(this.state.birthDate);
+    if (!isNaN(birthDate)) {
+      Object.assign(this.state, {
+        month: pad(birthDate.getMonth() + 1),
+        day: pad(birthDate.getDate()),
+        year: birthDate.getFullYear()
+      });
     }
   }
 
@@ -123,7 +132,27 @@ export class ChildrenEditor extends React.Component {
     this.props.actions.clearSelectedChild();
   }
 
+  renderEmpty() {
+    return (
+      <div className="Children-main" >
+        <div className="Mobile NavBar">
+          <i
+            className="mdi mdi-arrow-left"
+            onClick={this.goBack.bind(this)}
+            ></i>
+        </div>
+        <div className="ChildDetails">
+          The data might be deleted.
+        </div>
+      </div>
+    );
+  }
+
   render() {
+    if (!this.props.selectedChild) {
+      return this.renderEmpty();
+    }
+
     return (
       <div className="Children-main" >
         <div className="Mobile NavBar">
@@ -198,17 +227,19 @@ export class ChildrenEditor extends React.Component {
   }
 }
 
-reactMixin(ChildrenEditor.prototype, React.addons.LinkedStateMixin);
+reactMixin(ChildEdit.prototype, React.addons.LinkedStateMixin);
 
 const mapStateToProps = (state) => ({
+  children: state.children.data,
   selectedChild: state.children.selected,
   token: state.auth.token,
   isSaving: state.children.isSaving,
-  saveError: state.children.saveError
+  saveError: state.children.saveError,
+  path: state.routing.path
 });
 
 const mapDispatchToProps = (dispatch) => ({
   actions: bindActionCreators(actionCreators, dispatch)
 });
 
-export default connect(mapStateToProps, mapDispatchToProps)(ChildrenEditor);
+export default connect(mapStateToProps, mapDispatchToProps)(ChildEdit);

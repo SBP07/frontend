@@ -2,7 +2,7 @@ import React from 'react/addons';
 import reactMixin from 'react-mixin';
 import {connect} from 'react-redux';
 import { bindActionCreators } from 'redux';
-import * as actionCreators from '../actions/index.js';
+import actionCreators from '../actions';
 
 import Dialog from 'material-ui/lib/dialog';
 
@@ -38,6 +38,7 @@ export class ChildrenDestroyer extends React.Component {
   }
 
   render() {
+    if (!this.selectedChild) return null;
     return (
       <Dialog
         title="Are you sure?"

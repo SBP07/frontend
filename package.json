@@ -1,7 +1,7 @@
 {
   "name": "speelsysteem-frontend",
   "private": true,
-  "version": "0.0.4",
+  "version": "0.0.5",
   "description": "Speelsysteem Frontend",
   "main": "index.js",
   "scripts": {
@@ -29,6 +29,7 @@
     "exports-loader": "^0.6.2",
     "history": "^1.9.0",
     "imports-loader": "^0.6.5",
+    "inline-style-prefixer": "^0.5.4",
     "jwt-decode": "^1.4.0",
     "material-ui": "^0.13.4",
     "react": "^0.14.0",
@@ -39,7 +40,7 @@
     "react-tap-event-plugin": "^0.2.1",
     "redux": "^3.0.0",
     "redux-logger": "^2.0.4",
-    "redux-router": "^1.0.0-beta3",
+    "redux-simple-router": "^1.0.0",
     "redux-thunk": "^1.0.0",
     "whatwg-fetch": "^0.10.1",
     "yargs": "^3.18.0"
@@ -79,9 +80,6 @@
     "react-transform-catch-errors": "^1.0.0",
     "react-transform-hmr": "^1.0.0",
     "redbox-react": "^1.0.4",
-    "redux-devtools": "3.0.0-beta-3",
-    "redux-devtools-dock-monitor": "^1.0.0-beta-3",
-    "redux-devtools-log-monitor": "^1.0.0-beta-3",
     "sass-loader": "^3.0.0",
     "style-loader": "^0.13.0",
     "url-loader": "^0.5.6",

@@ -1,21 +1,19 @@
 import rootReducer from '../reducers';
 import thunk from 'redux-thunk';
-import routes from '../routes';
-import {reduxReactRouter} from 'redux-router';
-import createHistory from 'history/lib/createBrowserHistory';
+import { syncReduxAndRouter } from 'redux-simple-router';
 import {applyMiddleware, compose, createStore} from 'redux';
 import createLogger from 'redux-logger';
+import { createHistory } from 'history';
+const history = createHistory();
 
 export default function configureStore(initialState) {
   let createStoreWithMiddleware;
 
   const logger = createLogger();
-
   const middleware = applyMiddleware(thunk, logger);
 
   createStoreWithMiddleware = compose(
-   middleware,
-   reduxReactRouter({routes, createHistory})
+   middleware
   );
 
   const store = createStoreWithMiddleware(createStore)(rootReducer, initialState);
@@ -28,5 +26,8 @@ export default function configureStore(initialState) {
       });
   }
 
+  syncReduxAndRouter(history, store);
   return store;
 }
+
+export {history};

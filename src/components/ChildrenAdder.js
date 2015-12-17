@@ -2,7 +2,7 @@ import React from 'react/addons';
 import reactMixin from 'react-mixin';
 import {connect} from 'react-redux';
 import { bindActionCreators } from 'redux';
-import * as actionCreators from '../actions/index.js';
+import actionCreators from '../actions';
 
 import TextField from 'material-ui/lib/text-field';
 import Dialog from 'material-ui/lib/dialog';
@@ -129,8 +129,8 @@ export class ChildrenAdder extends React.Component {
           }
         ]}
         actionFocus="submit"
-        open={this.props.addMode}
-        onRequestClose={this._handleRequestClose}>
+        onRequestClose={this.onDialogCancel.bind(this)}
+        open={this.props.addMode}>
 
         <div className="Form-leftright">
           {

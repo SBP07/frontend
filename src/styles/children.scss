@@ -54,6 +54,9 @@
   padding: 10px 20px;
   cursor: pointer;
   outline: none;
+  display: block;
+  color: inherit;
+  text-decoration: none;
   &:hover, &:focus{
     background: transparentize($list-highlight-color, 0.6);
   }

@@ -1,7 +1,7 @@
 import React from 'react';
 import {Link} from 'react-router';
 import {connect} from 'react-redux';
-import {logoutAndRedirect} from '../actions/index.js';
+import {logoutAndRedirect} from '../actions/login.js';
 
 @connect((state) => {
   return {

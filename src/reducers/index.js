@@ -1,10 +1,12 @@
 import {combineReducers} from 'redux';
-import {routerStateReducer} from 'redux-router';
+import { routeReducer } from 'redux-simple-router';
 import auth from './auth';
 import children from './children';
+import contactpersons from './contactpersons';
 
 export default combineReducers({
   auth,
   children,
-  router: routerStateReducer
+  contactpersons,
+  routing: routeReducer
 });
