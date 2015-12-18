@@ -30,7 +30,7 @@ export class Navigation extends React.Component {
       <nav className="Navigation">
         <div className="Navigation-menu-left">
           <Link to="/" className="Navigation-logo">
-            <img src={require('../speellogo-white.png')} width="auto" height="20px" />
+            <img src={require('../images/speellogo-white.png')} width="auto" height="20px" />
           </Link>
           <Link to="/child">Children</Link>
         </div>
