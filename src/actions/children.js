@@ -68,8 +68,11 @@ export function childClicked(child) {
 }
 
 export function clearSelectedChild() {
-  return {
-    type: CHILD_CLEAR
+  return (dispatch) => {
+    dispatch(pushPath('/child'));
+    dispatch({
+      type: CHILD_CLEAR
+    });
   };
 }
 

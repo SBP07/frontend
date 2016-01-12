@@ -3,8 +3,6 @@ import {connect} from 'react-redux';
 import { bindActionCreators } from 'redux';
 import actionCreators from '../actions';
 
-import ContactPersonSelector from 'components/ContactPersonSelector';
-
 export class ChildDetails extends React.Component {
   static propTypes = {
     selectedChild: React.PropTypes.object,
@@ -62,9 +60,6 @@ export class ChildDetails extends React.Component {
           </div>
           <div className="Child-section">
             <span className="Child-label">contact person</span>
-            <ContactPersonSelector
-              child={child}
-              />
           </div>
         </div>
       </div>

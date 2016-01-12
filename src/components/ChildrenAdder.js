@@ -5,6 +5,7 @@ import { bindActionCreators } from 'redux';
 import actionCreators from '../actions';
 
 import TextField from 'material-ui/lib/text-field';
+import FlatButton from 'material-ui/lib/flat-button';
 import Dialog from 'material-ui/lib/dialog';
 import { pad } from '../utils/index.js';
 
@@ -117,18 +118,22 @@ export class ChildrenAdder extends React.Component {
   }
 
   render() {
+    const actions = [
+      <FlatButton
+        label="Cancel"
+        secondary={true}
+        onTouchTap={this.onDialogCancel.bind(this)} />,
+      <FlatButton
+        label={this.props.isSaving === true ? 'Adding...' : 'Add'}
+        primary={true}
+        keyboardFocused={true}
+        onTouchTap={this.onDialogSubmit.bind(this)} />
+    ];
+
     return (
       <Dialog
         title="Register a child"
-        actions={[
-          { text: 'Cancel', onTouchTap: this.onDialogCancel.bind(this) },
-          {
-            text: this.props.isSaving === true ? 'Adding...' : 'Add',
-            onTouchTap: this.onDialogSubmit.bind(this),
-            ref: 'submit'
-          }
-        ]}
-        actionFocus="submit"
+        actions={actions}
         onRequestClose={this.onDialogCancel.bind(this)}
         open={this.props.addMode}>
 
@@ -164,7 +169,7 @@ export class ChildrenAdder extends React.Component {
             <span className="Form-label">birthday</span>
             <span className="Form-value">
               <TextField
-                hintText="Day"
+                hintText="00"
                 floatingLabelText="Day"
                 style={{width: 200}}
                 valueLink={this.linkState('day')}
@@ -173,7 +178,7 @@ export class ChildrenAdder extends React.Component {
                 onEnterKeyDown={this.onDialogSubmit.bind(this)}
                 />
               <TextField
-                hintText="Month"
+                hintText="00"
                 floatingLabelText="Month"
                 style={{width: 200}}
                 valueLink={this.linkState('month')}
@@ -182,7 +187,7 @@ export class ChildrenAdder extends React.Component {
                 onEnterKeyDown={this.onDialogSubmit.bind(this)}
                 />
               <TextField
-                hintText="Year"
+                hintText="0000"
                 floatingLabelText="Year"
                 style={{width: 200}}
                 valueLink={this.linkState('year')}
@@ -193,8 +198,6 @@ export class ChildrenAdder extends React.Component {
             </span>
           </div>
         </div>
-
-
       </Dialog>
     );
   }

@@ -26,7 +26,6 @@ export class ChildrenSelector extends React.Component {
 
   componentWillMount() {
     this.fetchData();
-    this.props.actions.clearSelectedChild();
   }
 
   componentDidMount() {
@@ -44,6 +43,7 @@ export class ChildrenSelector extends React.Component {
         search: ''
       });
     } else {
+      if (props.selectedChild === null) return;
       this.props.actions.clearSelectedChild();
     }
   }
@@ -65,8 +65,7 @@ export class ChildrenSelector extends React.Component {
     if (this.props.children.length === 0) {
       this.props.actions.fetchChildrenData(token);
     }
-    /*
-    if (this.props.contactpersons.length === 0) {
+    /* if (this.props.contactpersons.length === 0) {
       this.props.actions.fetchContactPersons(token);
     }*/
   }

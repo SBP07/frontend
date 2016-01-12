@@ -33,6 +33,7 @@ export class Navigation extends React.Component {
             <img src={require('../images/speellogo-white.png')} width="auto" height="20px" />
           </Link>
           <Link to="/child">Children</Link>
+          <Link to="/contact">Contacts</Link>
         </div>
         <div className="Navigation-menu-right">
           <a href="#" onClick={() => dispatch(logoutAndRedirect())}>

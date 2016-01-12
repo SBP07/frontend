@@ -7,6 +7,8 @@ import actionCreators from '../actions';
 import { pad } from '../utils/index.js';
 import TextField from 'material-ui/lib/text-field';
 
+import ContactPersonSelector from 'components/ContactPersonSelector';
+
 
 export class ChildEdit extends React.Component {
   static propTypes = {
@@ -193,7 +195,7 @@ export class ChildEdit extends React.Component {
             <span className="Form-label">birthday</span>
             <span className="Form-value">
               <TextField
-                hintText="Day"
+                hintText="00"
                 floatingLabelText="Day"
                 style={{width: 200}}
                 valueLink={this.linkState('day')}
@@ -202,7 +204,7 @@ export class ChildEdit extends React.Component {
                 onEnterKeyDown={this.onSave.bind(this)}
                 />
               <TextField
-                hintText="Month"
+                hintText="00"
                 floatingLabelText="Month"
                 style={{width: 200}}
                 valueLink={this.linkState('month')}
@@ -211,13 +213,22 @@ export class ChildEdit extends React.Component {
                 onEnterKeyDown={this.onSave.bind(this)}
                 />
               <TextField
-                hintText="Year"
+                hintText="0000"
                 floatingLabelText="Year"
                 style={{width: 200}}
                 valueLink={this.linkState('year')}
                 errorText={this.state.yearError}
                 onFocus={this.clearErrors.bind(this)}
                 onEnterKeyDown={this.onSave.bind(this)}
+                />
+            </span>
+          </div>
+
+          <div className="Form-section">
+            <span className="Form-label">contact person</span>
+            <span className="Form-value">
+              <ContactPersonSelector
+                child={this.props.selectedChild}
                 />
             </span>
           </div>

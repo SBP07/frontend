@@ -16,6 +16,7 @@ import TextField from 'material-ui/lib/text-field';
 import Menu from 'material-ui/lib/menus/menu';
 import MenuItem from 'material-ui/lib/menus/menu-item';
 import Divider from 'material-ui/lib/menus/menu-divider';
+import FontIcon from 'material-ui/lib/font-icon';
 
 export class ContactPersonSelector extends React.Component {
   static propTypes = {
@@ -125,10 +126,19 @@ export class ContactPersonSelector extends React.Component {
     }
   }
 
+  _onAdd(text) {
+    console.log('Adding', text);
+  }
+
   _handleItemTouchTap(e, child) {
     setTimeout(() => {
       this.setState({open: false});
     }, this.props.touchTapCloseDelay);
+
+    if (child.key === 'add') {
+      this._onAdd(this.state.searchText);
+      return;
+    }
 
     const dataSource = this.props.contactpersons;
 
@@ -189,7 +199,7 @@ export class ContactPersonSelector extends React.Component {
         autoWidth={false}
         initiallyKeyboardFocused={false}
         onEscKeyDown={() => this.setState({open: false})}
-        onItemTouchTap={this._handleItemTouchTap}
+        onItemTouchTap={this._handleItemTouchTap.bind(this)}
         listStyle={Styles.mergeAndPrefix(styles.list, listStyle)}
         openDirection="bottom-left"
         style={mergedMenuStyles}>
@@ -207,6 +217,8 @@ export class ContactPersonSelector extends React.Component {
           key="add"
           vlaue="add"
           primaryText={'Create: ' + this.state.searchText}
+          leftIcon={
+            <FontIcon className="mdi mdi-plus" />}
         />
       </Menu>
     ) : null;
