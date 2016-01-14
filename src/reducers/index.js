@@ -2,11 +2,11 @@ import {combineReducers} from 'redux';
 import { routeReducer } from 'redux-simple-router';
 import auth from './auth';
 import children from './children';
-import contactpersons from './contactpersons';
+import contacts from './contacts';
 
 export default combineReducers({
   auth,
   children,
-  contactpersons,
+  contacts,
   routing: routeReducer
 });

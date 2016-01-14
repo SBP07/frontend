@@ -1,6 +1,6 @@
 import { parseResponse } from '../utils';
 import {GET_CHILDREN_DATA, GET_CHILDREN_DATA_SUCCESS,
-  CHILD_SELECTED, CHILD_CLEAR, SAVE_CHILD_REQUEST,
+  CHILD_SELECTED, CHILD_CLEAR, SAVE_CHILD_REQUEST, CHILD_EDIT_MODE,
   SAVE_CHILD_SUCCESS, SAVE_CHILD_CANCEL, SAVE_CHILD_FAILURE,
   CHILD_ADD_BUTTON_CLICKED, CHILD_EDIT_BUTTON_CLICKED, CHILD_DELETE_BUTTON_CLICKED,
   DELETE_CHILD_REQUEST, DELETE_CHILD_SUCCESS, DELETE_CHILD_FAILURE}
@@ -53,17 +53,16 @@ export function fetchChildrenData(token) {
 }
 
 // UI
-export function childSelected(child) {
+export function childSelected(childId) {
   return {
     type: CHILD_SELECTED,
-    payload: child
+    payload: childId
   };
 }
 
-export function childClicked(child) {
+export function childClicked(childId, rootPath = '/child/') {
   return (dispatch) => {
-    dispatch(pushPath('/child/' + child.id, child));
-    dispatch(childSelected(child));
+    dispatch(pushPath(rootPath + childId));
   };
 }
 
@@ -82,12 +81,19 @@ export function childAddButtonClicked() {
   };
 }
 
-export function childEditButtonClicked(child) {
+export function childEditButtonClicked(childId) {
   return (dispatch) => {
-    dispatch(pushPath('/child/edit/' + child.id, child));
+    dispatch(pushPath('/child/edit/' + childId));
     dispatch({
       type: CHILD_EDIT_BUTTON_CLICKED
     });
+  };
+}
+
+export function childEditMode(isEditMode) {
+  return {
+    type: CHILD_EDIT_MODE,
+    payload: isEditMode
   };
 }
 
@@ -193,6 +199,7 @@ export function deleteChild(token, childData) {
       .then(parseResponse)
       .then(({json: json, token: newToken}) => {
         dispatch(deleteChildSuccess(json, childData));
+        dispatch(pushPath('/child'));
         dispatch(loginUserSuccess(newToken));
       })
       .catch(error => {

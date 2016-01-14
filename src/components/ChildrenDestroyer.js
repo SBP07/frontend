@@ -4,6 +4,7 @@ import {connect} from 'react-redux';
 import { bindActionCreators } from 'redux';
 import actionCreators from '../actions';
 
+import FlatButton from 'material-ui/lib/flat-button';
 import Dialog from 'material-ui/lib/dialog';
 
 export class ChildrenDestroyer extends React.Component {
@@ -38,19 +39,23 @@ export class ChildrenDestroyer extends React.Component {
   }
 
   render() {
-    if (!this.selectedChild) return null;
+    if (!this.props.selectedChild) return null;
+    const actions = [
+      <FlatButton
+        label="Cancel"
+        secondary={true}
+        onTouchTap={this.onDialogCancel.bind(this)} />,
+      <FlatButton
+        label={this.props.isSaving === true ? 'Deleting...' : 'Delete'}
+        primary={true}
+        onTouchTap={this.onDialogSubmit.bind(this)} />
+    ];
+
     return (
       <Dialog
         title="Are you sure?"
-        actions={[
-          { text: 'Cancel', onTouchTap: this.onDialogCancel.bind(this) },
-          {
-            text: this.props.isSaving === true ? 'Deleting...' : 'Delete',
-            onTouchTap: this.onDialogSubmit.bind(this),
-            ref: 'submit'
-          }
-        ]}
-        actionFocus="submit"
+        actions={actions}
+        onRequestClose={this.onDialogCancel.bind(this)}
         open={this.props.deleteMode}>
         {
           this.props.saveError ?

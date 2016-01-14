@@ -58,9 +58,6 @@ export class ChildDetails extends React.Component {
             <span className="Child-label">birthday</span>
             <span className="Child-value">{new Date(child.birthDate).toDateString()}</span>
           </div>
-          <div className="Child-section">
-            <span className="Child-label">contact person</span>
-          </div>
         </div>
       </div>
     );

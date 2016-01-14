@@ -1,6 +1,6 @@
 import {createReducer} from '../utils/index.js';
 import {GET_CHILDREN_DATA_SUCCESS, GET_CHILDREN_DATA,
-  CHILD_SELECTED, CHILD_CLEAR,
+  CHILD_SELECTED, CHILD_CLEAR, CHILD_EDIT_MODE,
   CHILD_ADD_BUTTON_CLICKED, CHILD_EDIT_BUTTON_CLICKED, CHILD_DELETE_BUTTON_CLICKED,
   SAVE_CHILD_FAILURE, SAVE_CHILD_REQUEST, SAVE_CHILD_SUCCESS, SAVE_CHILD_CANCEL,
   DELETE_CHILD_REQUEST, DELETE_CHILD_SUCCESS, DELETE_CHILD_FAILURE} from '../constants/index.js';
@@ -15,6 +15,7 @@ const initialState = {
 };
 
 export default createReducer(initialState, {
+  // GET
   [GET_CHILDREN_DATA_SUCCESS]: (state, payload) => {
     return Object.assign({}, state, {
       'data': payload.data,
@@ -30,10 +31,11 @@ export default createReducer(initialState, {
       'selected': null
     });
   },
-  [CHILD_SELECTED]: (state, child) => {
+  // UI
+  [CHILD_SELECTED]: (state, childId) => {
+    const child = state.data.filter(c => c.id === childId)[0];
     return Object.assign({}, state, {
-      'selected': child,
-      'editMode': false
+      'selected': child
     });
   },
   [CHILD_CLEAR]: (state) => {
@@ -44,27 +46,33 @@ export default createReducer(initialState, {
   },
   [CHILD_ADD_BUTTON_CLICKED]: (state) => {
     return Object.assign({}, state, {
-      'addMode': true,
       'isSaving': false,
-      'saveError': null
+      'saveError': null,
+      'addMode': true
     });
   },
   [CHILD_EDIT_BUTTON_CLICKED]: (state) => {
     return Object.assign({}, state, {
-      'addMode': false,
       'isSaving': false,
       'saveError': null,
       'editMode': !state.editMode
     });
   },
-  [CHILD_DELETE_BUTTON_CLICKED]: (state) => {
+  [CHILD_EDIT_MODE]: (state, payload) => {
     return Object.assign({}, state, {
-      'addMode': false,
-      'deleteMode': !state.deleteMode,
       'isSaving': false,
-      'saveError': null
+      'saveError': null,
+      'editMode': payload
     });
   },
+  [CHILD_DELETE_BUTTON_CLICKED]: (state) => {
+    return Object.assign({}, state, {
+      'isSaving': false,
+      'saveError': null,
+      'deleteMode': !state.deleteMode
+    });
+  },
+  // SAVE
   [SAVE_CHILD_REQUEST]: (state) => {
     return Object.assign({}, state, {
       'isSaving': true,
@@ -92,6 +100,7 @@ export default createReducer(initialState, {
       'saveError': payload.message
     });
   },
+  // DELETE
   [DELETE_CHILD_REQUEST]: (state) => {
     return Object.assign({}, state, {
       'isSaving': true,
@@ -99,14 +108,14 @@ export default createReducer(initialState, {
     });
   },
   [DELETE_CHILD_SUCCESS]: (state, payload) => {
-    const children = state.children.filter((c) => c.id !== payload.id);
+    const data = state.data.filter((c) => c.id !== payload.id);
     return Object.assign({}, state, {
+      'selected': null,
       'isSaving': false,
       'deleteMode': false,
-      'selected': null,
       'editMode': false,
       'saveError': null,
-      'children': children
+      'data': data
     });
   },
   [DELETE_CHILD_FAILURE]: (state, payload) => {

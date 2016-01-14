@@ -1,7 +1,7 @@
 import React from 'react';
 import {Route, IndexRoute} from 'react-router';
 import {App, Child, Contact} from '../containers';
-import {HomeView, LoginView} from '../views';
+import {HomeView, LoginView, FourOFour} from '../views';
 import {ChildDetails, NoChild, ChildEdit} from '../views';
 import {ContactDetails, NoContact, ContactEdit} from '../views';
 import {requireAuthentication} from '../components/AuthenticatedComponent';
@@ -22,5 +22,6 @@ export default(
       <Route path=":id" component={ContactDetails} />
       <Route path="*" component={NoContact} />
     </Route>
+    <Route path="*" component={FourOFour} />
   </Route>
 );

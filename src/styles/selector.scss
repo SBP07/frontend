@@ -1,0 +1,69 @@
+@import 'base';
+
+
+.Selector-sidebar {
+  width: 25%;
+  display: block;
+  float: left;
+  height: 100%;
+  @media (max-width: $mobile-width) {
+    & {
+      width: 100%;
+      float: none;
+      &.Selector-selected {
+        display: none;
+      }
+    }
+  }
+}
+.Selector-search {
+  padding: 10px;
+  text-align: center;
+  .mdi-close {
+    cursor: pointer;
+    transition: 50ms all;
+    &:hover {
+      border: 1px solid #666;
+      background: #666;
+      color: white;
+      border-radius: 2000px;
+    }
+  }
+}
+.Selector-search-input {
+  margin-right: -25px;
+  margin-left: -12.5px;
+  padding: 10px;
+  width: 90%;
+}
+
+.Selector-list {
+  background: #ececec;
+  height: calc(100% - 62px);
+  overflow-y: scroll;
+}
+.Selector-list-item {
+  padding: 10px 20px;
+  cursor: pointer;
+  outline: none;
+  display: block;
+  color: inherit;
+  text-decoration: none;
+  &:hover, &:focus{
+    background: transparentize($list-highlight-color, 0.6);
+  }
+  strong {
+    float: right;
+  }
+}
+.Selector-empty-item {
+  padding: 10px 20px;
+  outline: none;
+}
+.Selector-list-item--highlighted {
+  background: $list-highlight-color;
+  cursor: default;
+  &:hover, &:focus {
+    background: $list-highlight-color;
+  }
+}

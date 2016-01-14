@@ -20,7 +20,7 @@ import FontIcon from 'material-ui/lib/font-icon';
 
 export class ContactPersonSelector extends React.Component {
   static propTypes = {
-    contactpersons: React.PropTypes.array,
+    contacts: React.PropTypes.array,
     animated: React.PropTypes.bool,
     disableFocusRipple: React.PropTypes.bool,
     errorStyle: React.PropTypes.object,
@@ -140,7 +140,7 @@ export class ContactPersonSelector extends React.Component {
       return;
     }
 
-    const dataSource = this.props.contactpersons;
+    const dataSource = this.props.contacts;
 
     let chosenRequest, index, searchText;
     if (typeof dataSource[0] === 'string') {
@@ -167,7 +167,7 @@ export class ContactPersonSelector extends React.Component {
 
     this.focusOnInput = true;
 
-    this.props.onUpdateInput(searchText, this.props.contactpersons);
+    this.props.onUpdateInput(searchText, this.props.contacts);
   }
 
   componentClickAway() {
@@ -186,7 +186,7 @@ export class ContactPersonSelector extends React.Component {
     const styles = this.getStyles();
     const mergedMenuStyles = ImmutabilityHelper.merge(styles.menu, menuStyle);
 
-    const contactsList = this.props.contactpersons.filter((c) => {
+    const contactsList = this.props.contacts.filter((c) => {
       return c.firstName.indexOf(this.state.searchText);
     });
 
@@ -293,7 +293,7 @@ ContactPersonSelector.Divider = Divider;
 const mapStateToProps = (state) => ({
   children: state.children.data,
   selectedChild: state.children.selected,
-  contactpersons: state.contactpersons.data
+  contacts: state.contacts.data
 });
 
 const mapDispatchToProps = (dispatch) => ({

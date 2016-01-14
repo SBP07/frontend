@@ -6,14 +6,23 @@
   &:last-child {
     border-bottom: none;
   }
+  &:after {
+    clear: both;
+    overflow: hidden;
+    content: " ";
+    display: block;
+  }
 }
 .Form-label {
-  display: inline-block;
-  width: 100px;
+  display: block;
+  width: 20%;
+  float: left;
   color: rgba(0, 0, 0, .7);
 }
 .Form-value {
-  display: inline-block;
+  display: block;
+  width: 80%;
+  float: left;
   color: black;
 }
 .Form-message {

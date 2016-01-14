@@ -9,14 +9,17 @@ import FloatingActionButton from 'material-ui/lib/floating-action-button';
 export class ChildrenButtons extends React.Component {
   static propTypes = {
     actions: React.PropTypes.object,
-    selectedChild: React.PropTypes.object
+    selectedChild: React.PropTypes.object,
+    editMode: React.PropTypes.bool,
+    addMode: React.PropTypes.bool,
+    deleteMode: React.PropTypes.bool
   }
 
   render() {
     return (
       <div>
         <FloatingActionButton
-          backgroundColor="#212121"
+          backgroundColor={this.props.addMode ? '#039BE5' : '#212121'}
           style={{
             position: 'absolute',
             right: 30,
@@ -29,7 +32,7 @@ export class ChildrenButtons extends React.Component {
         </FloatingActionButton>
 
         <FloatingActionButton
-          backgroundColor="#039BE5"
+          backgroundColor={this.props.editMode ? '#039BE5' : '#212121'}
           style={{
             position: 'absolute',
             right: 100,
@@ -38,14 +41,14 @@ export class ChildrenButtons extends React.Component {
             display: this.props.selectedChild ? 'block' : 'none'
           }}
           onTouchTap={
-            () => this.props.actions.childEditButtonClicked(this.props.selectedChild)
+            () => this.props.actions.childEditButtonClicked(this.props.selectedChild.id)
           }
         >
           <i className="mdi mdi-pencil"></i>
         </FloatingActionButton>
 
         <FloatingActionButton
-          backgroundColor="#DD2C00"
+          backgroundColor={this.props.deleteMode ? '#039BE5' : '#212121'}
           style={{
             position: 'absolute',
             right: 170,
@@ -67,6 +70,9 @@ reactMixin(ChildrenButtons.prototype, React.addons.LinkedStateMixin);
 const mapStateToProps = (state) => ({
   selectedChild: state.children.selected,
   token: state.auth.token,
+  editMode: state.children.editMode,
+  addMode: state.children.addMode,
+  deleteMode: state.children.deleteMode,
   isSaving: state.children.isSaving,
   saveError: state.children.saveError
 });

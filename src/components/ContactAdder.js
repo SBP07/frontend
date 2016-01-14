@@ -8,6 +8,10 @@ import TextField from 'material-ui/lib/text-field';
 import FlatButton from 'material-ui/lib/flat-button';
 import Dialog from 'material-ui/lib/dialog';
 import { pad } from '../utils/index.js';
+import SelectField from 'material-ui/lib/select-field';
+import AutoComplete from 'material-ui/lib/auto-complete';
+import zipCodes from '../constants/zip-be';
+import MenuItem from 'material-ui/lib/menus/menu-item';
 
 export class ChildrenAdder extends React.Component {
   static propTypes = {
@@ -25,9 +29,12 @@ export class ChildrenAdder extends React.Component {
     this.state = {
       firstName: '',
       lastName: '',
-      day: '',
-      month: '',
-      year: ''
+      street: '',
+      zipCode: '',
+      city: '',
+      country: 'Belgium',
+      landline: '',
+      mobilePhone: ''
     };
   }
 
@@ -38,6 +45,7 @@ export class ChildrenAdder extends React.Component {
 
   onDialogSubmit() {
     if (this.props.isSaving === true) return;
+    console.log(this.state);
     if (this.verify()) {
       let {day, month, year} = this.state;
       day = pad(parseInt(day, 10));
@@ -117,6 +125,12 @@ export class ChildrenAdder extends React.Component {
     });
   }
 
+  handleCountryChange(event, index, value) {
+    this.setState({
+      country: value
+    });
+  }
+
   render() {
     const actions = [
       <FlatButton
@@ -129,9 +143,15 @@ export class ChildrenAdder extends React.Component {
         onTouchTap={this.onDialogSubmit.bind(this)} />
     ];
 
+    let matchedCities = [];
+    if (this.state.zipCode.length > 0) {
+      matchedCities = zipCodes.filter((obj) => obj.zip === this.state.zipCode);
+    }
+
     return (
       <Dialog
-        title="Register a child"
+        autoScrollBodyContent={true}
+        title="Register a contact person"
         actions={actions}
         onRequestClose={this.onDialogCancel.bind(this)}
         open={this.props.addMode}>
@@ -165,37 +185,32 @@ export class ChildrenAdder extends React.Component {
           </div>
 
           <div className="Form-section">
-            <span className="Form-label">birthday</span>
+            <span className="Form-label">address</span>
             <span className="Form-value">
               <TextField
-                hintText="00"
-                floatingLabelText="Day"
-                style={{width: 200}}
-                valueLink={this.linkState('day')}
-                errorText={this.state.dayError}
-                onFocus={this.clearErrors.bind(this)}
-                onEnterKeyDown={this.onDialogSubmit.bind(this)}
+                floatingLabelText="Street"
+                valueLink={this.linkState('street')}
                 />
               <TextField
-                hintText="00"
-                floatingLabelText="Month"
-                style={{width: 200}}
-                valueLink={this.linkState('month')}
-                errorText={this.state.monthError}
-                onFocus={this.clearErrors.bind(this)}
-                onEnterKeyDown={this.onDialogSubmit.bind(this)}
+                floatingLabelText="Zip"
+                valueLink={this.linkState('zipCode')}
                 />
-              <TextField
-                hintText="0000"
-                floatingLabelText="Year"
-                style={{width: 200}}
-                valueLink={this.linkState('year')}
-                errorText={this.state.yearError}
-                onFocus={this.clearErrors.bind(this)}
-                onEnterKeyDown={this.onDialogSubmit.bind(this)}
+              <AutoComplete
+                floatingLabelText="City"
+                dataSource={matchedCities.map(obj => obj.city)}
                 />
+              <SelectField
+                hintText="Country"
+                floatingLabelText="Country"
+                value={this.state.country}
+                onChange={this.handleCountryChange.bind(this)}>
+                <MenuItem value="Belgium" primaryText="Belgium"/>
+                <MenuItem value="Nederland" primaryText="Nederland"/>
+                <MenuItem value="Deutschland" primaryText="Deutschland"/>
+              </SelectField>
             </span>
           </div>
+
         </div>
       </Dialog>
     );
