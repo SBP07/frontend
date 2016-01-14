@@ -190,7 +190,7 @@ export class ChildEdit extends React.Component {
             rightIconButton={rightIconMenu}
             primaryText={`${contactPerson.firstName} ${contactPerson.lastName}`}
             leftAvatar={
-              <Avatar>{contactPerson.firstName[0]}{contactPerson.lastName[0]}</Avatar>
+              <Avatar style={{fontSize: 12}} backgroundColor={Colors.indigo600}>{contactPerson.firstName[0]}{contactPerson.lastName[0]}</Avatar>
             }
             />
         );
