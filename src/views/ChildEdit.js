@@ -20,14 +20,11 @@ import MenuItem from 'material-ui/lib/menus/menu-item';
 
 export class ChildEdit extends React.Component {
   static propTypes = {
-    children: React.PropTypes.array,
     selectedItem: React.PropTypes.object,
     actions: React.PropTypes.object,
     token: React.PropTypes.string,
     isSaving: React.PropTypes.bool,
     saveError: React.PropTypes.string,
-    path: React.PropTypes.string,
-    params: React.PropTypes.object,
     relations: React.PropTypes.array
   }
 
@@ -296,12 +293,10 @@ export class ChildEdit extends React.Component {
 reactMixin(ChildEdit.prototype, React.addons.LinkedStateMixin);
 
 const mapStateToProps = (state) => ({
-  children: state.children.data,
   selectedItem: state.children.selected,
   token: state.auth.token,
   isSaving: state.children.isSaving,
   saveError: state.children.saveError,
-  path: state.routing.path,
   relations: state.children.relations
 });
 
