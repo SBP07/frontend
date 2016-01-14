@@ -47,7 +47,11 @@
 .Person-label {
   display: inline-block;
   width: 100px;
-  color: rgba(0, 0, 0, .7);
+
+  color: rgba(0, 0, 0, .54);
+  font-size: 14px;
+  font-weight: 500;
+  line-height: 48px;
 }
 .Person-value {
   display: inline-block;

@@ -3,7 +3,9 @@ import {GET_CHILDREN_DATA, GET_CHILDREN_DATA_SUCCESS,
   CHILD_SELECTED, CHILD_CLEAR, SAVE_CHILD_REQUEST, CHILD_EDIT_MODE,
   SAVE_CHILD_SUCCESS, SAVE_CHILD_CANCEL, SAVE_CHILD_FAILURE,
   CHILD_ADD_BUTTON_CLICKED, CHILD_EDIT_BUTTON_CLICKED, CHILD_DELETE_BUTTON_CLICKED,
-  DELETE_CHILD_REQUEST, DELETE_CHILD_SUCCESS, DELETE_CHILD_FAILURE}
+  DELETE_CHILD_REQUEST, DELETE_CHILD_SUCCESS, DELETE_CHILD_FAILURE,
+  GET_CHILD_CONTACTS_SUCCESS, GET_CHILD_CONTACTS,
+  ADD_CONTACT_FOR_CHILD_SUCCESS, ADD_CONTACT_FOR_CHILD, ADD_CONTACT_FOR_CHILD_FAILURE}
   from '../constants';
 import { pushPath } from 'redux-simple-router';
 
@@ -210,5 +212,104 @@ export function deleteChild(token, childData) {
           throw error;
         }
       });
+  };
+}
+
+
+// Getting contacts
+export function receiveContactPeopleForChild(relations) {
+  return {
+    type: GET_CHILD_CONTACTS_SUCCESS,
+    payload: relations
+  };
+}
+
+export function fetchContactsForChildRequest(childId) {
+  return {
+    type: GET_CHILD_CONTACTS,
+    payload: childId
+  };
+}
+
+export function fetchContactsForChild(token, childId) {
+  return (dispatch) => {
+    return fetch(`${backendURL}/api/v0/child/id/${childId}/contactPeople`, {
+      credentials: 'include',
+      headers: {
+        'X-Auth-Token': `${token}`
+      }
+    })
+    .then(parseResponse)
+    .then(({json: relations, token: newToken}) => {
+      dispatch(receiveContactPeopleForChild(relations));
+      dispatch(loginUserSuccess(newToken));
+    })
+    .catch(error => {
+      if (error.response && error.response.status === 401) {
+        dispatch(loginUserFailure(error));
+        dispatch(pushPath('/login'));
+      } else {
+        throw error;
+      }
+    });
+  };
+}
+
+// Adding contacts
+
+export function addContactForChildSuccess(json) {
+  return {
+    type: ADD_CONTACT_FOR_CHILD_SUCCESS,
+    payload: json ? json.message : null
+  };
+}
+
+export function addContactForChildRequest(childId, contactId) {
+  return {
+    type: ADD_CONTACT_FOR_CHILD,
+    payload: {
+      childId,
+      contactId
+    }
+  };
+}
+
+export function addContactForChildFailure(error) {
+  return {
+    type: ADD_CONTACT_FOR_CHILD_FAILURE,
+    payload: error
+  };
+}
+
+export function addContactForChild(token, childId, contactId) {
+  return function(dispatch) {
+    dispatch(addContactForChildRequest(childId, contactId));
+    return fetch(`${backendURL}/api/v0/child/id/${childId}/contactPeople`, {
+      method: 'post',
+      credentials: 'include',
+      headers: {
+        'Accept': 'application/json',
+        'Content-Type': 'application/json',
+        'X-Auth-Token': `${token}`
+      },
+      body: JSON.stringify({
+        'contactPersonId': contactId,
+        'relationship': 'unspecified' // TODO
+      })
+    })
+    .then(parseResponse)
+    .then(({json: json, token: newToken}) => {
+      dispatch(addContactForChildSuccess(json));
+      dispatch(loginUserSuccess(newToken));
+      dispatch(fetchContactsForChild(newToken, childId));
+    })
+    .catch(error => {
+      if (error.response && error.response.status === 401) {
+        dispatch(loginUserFailure(error));
+      } else {
+        dispatch(addContactForChildFailure(error.json));
+        throw error;
+      }
+    });
   };
 }

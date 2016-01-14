@@ -59,6 +59,7 @@ export default class Contact extends React.Component {
   fetchData() {
     const {token, dataSource} = this.props;
     if (dataSource.length === 0) {
+      this.props.actions.fetchChildrenData(token);
       this.props.actions.fetchContactsData(token);
     }
   }
@@ -66,7 +67,7 @@ export default class Contact extends React.Component {
   render() {
     const rootPath = this.props.editMode ? '/contact/edit/' : '/contact/';
     return (
-      <div className="Contacts">
+      <div className="Person">
         <PersonSelector
           rootPath={rootPath}
           onSelected={

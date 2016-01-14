@@ -3,10 +3,13 @@ import {GET_CHILDREN_DATA_SUCCESS, GET_CHILDREN_DATA,
   CHILD_SELECTED, CHILD_CLEAR, CHILD_EDIT_MODE,
   CHILD_ADD_BUTTON_CLICKED, CHILD_EDIT_BUTTON_CLICKED, CHILD_DELETE_BUTTON_CLICKED,
   SAVE_CHILD_FAILURE, SAVE_CHILD_REQUEST, SAVE_CHILD_SUCCESS, SAVE_CHILD_CANCEL,
-  DELETE_CHILD_REQUEST, DELETE_CHILD_SUCCESS, DELETE_CHILD_FAILURE} from '../constants/index.js';
+  DELETE_CHILD_REQUEST, DELETE_CHILD_SUCCESS, DELETE_CHILD_FAILURE,
+  GET_CHILD_CONTACTS_SUCCESS, GET_CHILD_CONTACTS,
+  ADD_CONTACT_FOR_CHILD_SUCCESS, ADD_CONTACT_FOR_CHILD, ADD_CONTACT_FOR_CHILD_FAILURE} from '../constants/index.js';
 
 const initialState = {
   data: [],
+  relations: [],
   selected: null,
   isFetching: false,
   editMode: false,
@@ -121,6 +124,36 @@ export default createReducer(initialState, {
     return Object.assign({}, state, {
       'isSaving': false,
       'saveError': msg
+    });
+  },
+  [GET_CHILD_CONTACTS_SUCCESS]: (state, payload) => {
+    return Object.assign({}, state, {
+      'isFetching': false,
+      'relations': payload
+    });
+  },
+  [GET_CHILD_CONTACTS]: (state) => {
+    return Object.assign({}, state, {
+      'isFetching': true,
+      'relations': []
+    });
+  },
+  [ADD_CONTACT_FOR_CHILD_SUCCESS]: (state) => {
+    return Object.assign({}, state, {
+      'isSaving': false,
+      'saveError': null
+    });
+  },
+  [ADD_CONTACT_FOR_CHILD]: (state) => {
+    return Object.assign({}, state, {
+      'isSaving': true,
+      'saveError': null
+    });
+  },
+  [ADD_CONTACT_FOR_CHILD_FAILURE]: (state, payload) => {
+    return Object.assign({}, state, {
+      'isSaving': false,
+      'saveError': payload.message
     });
   }
 });

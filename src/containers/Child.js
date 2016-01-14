@@ -7,6 +7,7 @@ import PersonSelector from '../components/PersonSelector';
 import PersonButtons from '../components/PersonButtons';
 import PersonDestroyer from '../components/PersonDestroyer';
 import ChildrenAdder from '../components/ChildrenAdder';
+import ContactAdder from '../components/ContactAdder';
 
 export class Child extends React.Component {
   static propTypes = {
@@ -48,11 +49,12 @@ export class Child extends React.Component {
       this.props.actions.clearSelectedChild();
     }
 
-    // Details, select child
+    // select child
     if (path !== '/child' && id) {
       if (dataSource.length === 0) return; // No children yet
       if (selectedItem && selectedItem.id === id) return; // Same child
       this.props.actions.childSelected(id);
+      this.props.actions.fetchContactsForChild(this.props.token, id);
     }
   }
 
@@ -60,13 +62,14 @@ export class Child extends React.Component {
     const {token, dataSource} = this.props;
     if (dataSource.length === 0) {
       this.props.actions.fetchChildrenData(token);
+      this.props.actions.fetchContactsData(token);
     }
   }
 
   render() {
     const rootPath = this.props.editMode ? '/child/edit/' : '/child/';
     return (
-      <div className="Children">
+      <div className="Person">
         <PersonSelector
           rootPath={rootPath}
           onSelected={
@@ -97,6 +100,7 @@ export class Child extends React.Component {
           }
           />
         <ChildrenAdder />
+        <ContactAdder />
       </div>
     );
   }

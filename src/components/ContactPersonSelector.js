@@ -15,7 +15,7 @@ import KeyCode from '../utils/key-code';
 import TextField from 'material-ui/lib/text-field';
 import Menu from 'material-ui/lib/menus/menu';
 import MenuItem from 'material-ui/lib/menus/menu-item';
-import Divider from 'material-ui/lib/menus/menu-divider';
+import Divider from 'material-ui/lib/divider';
 import FontIcon from 'material-ui/lib/font-icon';
 
 export class ContactPersonSelector extends React.Component {
@@ -36,7 +36,10 @@ export class ContactPersonSelector extends React.Component {
     searchText: React.PropTypes.string,
     style: React.PropTypes.object,
     touchTapCloseDelay: React.PropTypes.number,
-    updateWhenFocused: React.PropTypes.bool
+    updateWhenFocused: React.PropTypes.bool,
+    label: React.PropTypes.string,
+    onAdd: React.PropTypes.func,
+    onSelect: React.PropTypes.func
   }
 
   static contextTypes = {
@@ -126,37 +129,27 @@ export class ContactPersonSelector extends React.Component {
     }
   }
 
-  _onAdd(text) {
-    console.log('Adding', text);
+  _onAdd() {
+    this.props.onAdd();
   }
 
-  _handleItemTouchTap(e, child) {
+  _handleItemTouchTap(e, element) {
     setTimeout(() => {
       this.setState({open: false});
     }, this.props.touchTapCloseDelay);
 
-    if (child.key === 'add') {
+    if (element.key === 'add') {
       this._onAdd(this.state.searchText);
       return;
     }
 
     const dataSource = this.props.contacts;
-
-    let chosenRequest, index, searchText;
-    if (typeof dataSource[0] === 'string') {
-      chosenRequest = this.requestsList[parseInt(child.key, 10)];
-      index = dataSource.indexOf(chosenRequest);
-      searchText = dataSource[index];
-    } else {
-      chosenRequest = child.key;
-      index = dataSource.indexOf(
-          dataSource.filter((item) => chosenRequest === item.text)[0]);
-      searchText = chosenRequest;
-    }
+    const contactId = element.props.value;
+    const contact = dataSource.filter((item) => contactId === item.id)[0];
+    const searchText = `${contact.firstName} ${contact.lastName}`;
 
     this.setState({searchText: searchText});
-
-    this.props.onNewRequest(chosenRequest, index, dataSource);
+    this.props.onNewRequest(contact, dataSource);
   }
 
   _updateRequests(searchText) {
@@ -187,7 +180,7 @@ export class ContactPersonSelector extends React.Component {
     const mergedMenuStyles = ImmutabilityHelper.merge(styles.menu, menuStyle);
 
     const contactsList = this.props.contacts.filter((c) => {
-      return c.firstName.indexOf(this.state.searchText);
+      return `${c.firstName} ${c.lastName}`.indexOf(this.state.searchText) > -1;
     });
 
     return this.state.open && this.state.searchText !== '' ? (
@@ -209,14 +202,21 @@ export class ContactPersonSelector extends React.Component {
               innerDivStyle={{overflow: 'hidden'}}
               key={index}
               value={c.id}
-              primaryText={c.firstName}
+              primaryText={
+                <span>
+                  {c.firstName}&nbsp;
+                  <b>{c.lastName}</b>
+                </span>
+              }
             />
         )}
-        <Divider />
+        {
+          contactsList.length > 0 ? <Divider /> : null
+        }
         <MenuItem
           key="add"
-          vlaue="add"
-          primaryText={'Create: ' + this.state.searchText}
+          value="add"
+          primaryText={'Create new contact'}
           leftIcon={
             <FontIcon className="mdi mdi-plus" />}
         />
@@ -233,8 +233,8 @@ export class ContactPersonSelector extends React.Component {
     const styles = this.getStyles();
     const textFieldProps = {
       style: Styles.mergeAndPrefix(styles.input, style),
-      floatingLabelText: 'Contact Person',
-      hintText: 'Contact Person',
+      floatingLabelText: this.props.label,
+      hintText: this.props.label,
       fullWidth: true,
       multiLine: false,
       errorStyle: Styles.mergeAndPrefix(styles.error, errorStyle)

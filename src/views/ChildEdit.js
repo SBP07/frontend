@@ -9,6 +9,14 @@ import TextField from 'material-ui/lib/text-field';
 
 import ContactPersonSelector from 'components/ContactPersonSelector';
 
+import List from 'material-ui/lib/lists/list';
+import ListItem from 'material-ui/lib/lists/list-item';
+import Avatar from 'material-ui/lib/avatar';
+import Colors from 'material-ui/lib/styles/colors';
+import IconButton from 'material-ui/lib/icon-button';
+import MoreVertIcon from 'material-ui/lib/svg-icons/navigation/more-vert';
+import IconMenu from 'material-ui/lib/menus/icon-menu';
+import MenuItem from 'material-ui/lib/menus/menu-item';
 
 export class ChildEdit extends React.Component {
   static propTypes = {
@@ -19,7 +27,8 @@ export class ChildEdit extends React.Component {
     isSaving: React.PropTypes.bool,
     saveError: React.PropTypes.string,
     path: React.PropTypes.string,
-    params: React.PropTypes.object
+    params: React.PropTypes.object,
+    relations: React.PropTypes.array
   }
 
   constructor(props) {
@@ -134,6 +143,11 @@ export class ChildEdit extends React.Component {
     this.props.actions.clearSelectedChild();
   }
 
+  handleContactSelect(contact) {
+    const {token, selectedItem} = this.props;
+    this.props.actions.addContactForChild(token, selectedItem.id, contact.id);
+  }
+
   renderEmpty() {
     return (
       <div className="Person-main" >
@@ -148,6 +162,45 @@ export class ChildEdit extends React.Component {
         </div>
       </div>
     );
+  }
+
+  renderContacts() {
+    const contacts = [];
+
+    const iconButtonElement = (
+      <IconButton
+        touch={true}
+        tooltip="more"
+        tooltipPosition="bottom-left">
+        <MoreVertIcon color={Colors.grey400} />
+      </IconButton>
+    );
+
+    const rightIconMenu = (
+      <IconMenu iconButtonElement={iconButtonElement}>
+        <MenuItem>Edit</MenuItem>
+        <MenuItem>Delete</MenuItem>
+      </IconMenu>
+    );
+
+    if (this.props.relations.length > 0) {
+      for (const relation of this.props.relations) {
+        const {relationship, contactPerson} = relation;
+        contacts.push(
+          <ListItem
+            key={contactPerson.id}
+            title={relationship}
+            rightIconButton={rightIconMenu}
+            primaryText={`${contactPerson.firstName} ${contactPerson.lastName}`}
+            leftAvatar={
+              <Avatar>{contactPerson.firstName[0]}{contactPerson.lastName[0]}</Avatar>
+            }
+            />
+        );
+      }
+    }
+
+    return (<List subheader="contacts">{contacts}</List>);
   }
 
   render() {
@@ -225,12 +278,14 @@ export class ChildEdit extends React.Component {
           </div>
 
           <div className="Form-section">
-            <span className="Form-label">contact person</span>
-            <span className="Form-value">
-              <ContactPersonSelector
-                child={this.props.selectedItem}
-                />
-            </span>
+            {this.renderContacts()}
+            <ContactPersonSelector
+              style={{padding: 3}}
+              label="Add contact person..."
+              child={this.props.selectedItem}
+              onAdd={this.props.actions.contactAddButtonClicked}
+              onNewRequest={this.handleContactSelect.bind(this)}
+              />
           </div>
         </div>
       </div>
@@ -246,7 +301,8 @@ const mapStateToProps = (state) => ({
   token: state.auth.token,
   isSaving: state.children.isSaving,
   saveError: state.children.saveError,
-  path: state.routing.path
+  path: state.routing.path,
+  relations: state.children.relations
 });
 
 const mapDispatchToProps = (dispatch) => ({

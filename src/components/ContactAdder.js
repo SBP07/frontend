@@ -14,7 +14,6 @@ import MenuItem from 'material-ui/lib/menus/menu-item';
 
 export class ContactsAdder extends React.Component {
   static propTypes = {
-    selectedItem: React.PropTypes.object,
     actions: React.PropTypes.object,
     token: React.PropTypes.string,
     addMode: React.PropTypes.bool,
@@ -184,7 +183,6 @@ export class ContactsAdder extends React.Component {
 reactMixin(ContactsAdder.prototype, React.addons.LinkedStateMixin);
 
 const mapStateToProps = (state) => ({
-  selectedItem: state.contacts.selected,
   token: state.auth.token,
   addMode: state.contacts.addMode,
   isSaving: state.contacts.isSaving,
