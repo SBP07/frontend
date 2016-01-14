@@ -22,14 +22,14 @@ export class ChildDetails extends React.Component {
 
   renderBlank() {
     return (
-      <div className="Children-main" >
+      <div className="Person-main" >
         <div className="Mobile NavBar">
           <i
             className="mdi mdi-arrow-left"
             onClick={this.goBack.bind(this)}
             ></i>
         </div>
-        <div className="ChildDetails">
+        <div className="Person-details">
           The data might be deleted.
         </div>
       </div>
@@ -41,6 +41,21 @@ export class ChildDetails extends React.Component {
       return this.renderBlank();
     }
     const item = this.props.selectedItem;
+
+    let address = null;
+    if (item.address) {
+      address = (
+        <div className="Person-section">
+          <span className="Person-label">address</span>
+          <span className="Person-value">
+            {item.address.street},<br/>
+            {item.address.zipCode} {item.address.city},<br/>
+            {item.address.country}
+          </span>
+        </div>
+      );
+    }
+
     return (
       <div className="Person-main" >
         <div className="Mobile NavBar">
@@ -53,9 +68,14 @@ export class ChildDetails extends React.Component {
           <h2 className="Person-name">
             {item.firstName} {item.lastName}
           </h2>
+          {address}
           <div className="Person-section">
-            <span className="Person-label">birthday</span>
-            <span className="Person-value">{new Date(item.birthDate).toDateString()}</span>
+            <span className="Person-label">mobile</span>
+            <span className="Person-value">{item.mobilePhone}</span>
+          </div>
+          <div className="Person-section">
+            <span className="Person-label">landline</span>
+            <span className="Person-value">{item.landline}</span>
           </div>
         </div>
       </div>
@@ -64,7 +84,7 @@ export class ChildDetails extends React.Component {
 }
 
 const mapStateToProps = (state) => ({
-  selectedItem: state.children.selected
+  selectedItem: state.contacts.selected
 });
 
 const mapDispatchToProps = (dispatch) => ({

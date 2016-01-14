@@ -6,13 +6,14 @@ import actionCreators from '../actions';
 
 import { pad } from '../utils/index.js';
 import TextField from 'material-ui/lib/text-field';
+import SelectField from 'material-ui/lib/select-field';
+import AutoComplete from 'material-ui/lib/auto-complete';
+import zipCodes from '../constants/zip-be';
+import MenuItem from 'material-ui/lib/menus/menu-item';
 
-import ContactPersonSelector from 'components/ContactPersonSelector';
-
-
-export class ChildEdit extends React.Component {
+export class ContactEdit extends React.Component {
   static propTypes = {
-    children: React.PropTypes.array,
+    contacts: React.PropTypes.array,
     selectedItem: React.PropTypes.object,
     actions: React.PropTypes.object,
     token: React.PropTypes.string,
@@ -24,38 +25,49 @@ export class ChildEdit extends React.Component {
 
   constructor(props) {
     super(props);
-    this.setChildData();
+    this.setContactData();
   }
 
   componentWillReceiveProps() {
-    this.setChildData();
+    this.setContactData();
   }
 
   onSave() {
     if (this.props.isSaving === true) return;
-    if (this.verify()) {
-      let {day, month, year} = this.state;
-      day = pad(parseInt(day, 10));
-      month = pad(parseInt(month, 10));
-      year = parseInt(year, 10);
 
-      const child = {
-        firstName: this.state.firstName,
-        lastName: this.state.lastName,
-        birthDate: `${year}-${month}-${day}`,
-        tenantCanonicalName: SPEELDATABASE,
-        id: this.state.id
-      };
-      this.props.actions.saveChild(this.props.token, child);
+    const contact = {
+      firstName: this.state.firstName,
+      lastName: this.state.lastName,
+      mobilePhone: this.state.mobilePhone,
+      landline: this.state.landline,
+      tenantCanonicalName: SPEELDATABASE,
+      id: this.state.id
+    };
+
+    const {street, zipCode, city, country} = this.state;
+    if (street && zipCode && city && country) {
+      contact.address = {street, zipCode, city, country};
+      contact.address.zipCode = parseInt(contact.address.zipCode, 10);
     }
+
+    this.props.actions.saveContact(this.props.token, contact);
   }
 
-  setChildData() {
+  setContactData() {
     this.state = Object.assign({
       firstName: '',
       lastName: '',
-      birthDate: null
+      mobilePhone: '',
+      landline: '',
+      street: '',
+      zipCode: '',
+      city: '',
+      country: 'Belgium'
     }, this.props.selectedItem);
+
+    if (this.props.selectedItem && this.props.selectedItem.address) {
+      Object.assign(this.state, this.props.selectedItem.address);
+    }
 
     const birthDate = new Date(this.state.birthDate);
     if (!isNaN(birthDate)) {
@@ -67,71 +79,20 @@ export class ChildEdit extends React.Component {
     }
   }
 
-  clearErrors() {
-    this.setState({
-      dayError: null,
-      monthError: null,
-      yearError: null,
-      firstNameError: null,
-      lastNameError: null
-    });
-  }
-
-  verify() {
-    let {day, month, year} = this.state;
-    const {firstName, lastName} = this.state;
-    let ok = true;
-
-    this.setState({
-      dayError: null,
-      monthError: null,
-      yearError: null
-    });
-
-    day = parseInt(day, 10);
-    month = parseInt(month, 10);
-    year = parseInt(year, 10);
-
-    if (isNaN(day) || day > 31 || day < 1) {
-      this.setState({
-        dayError: 'Enter a valid day'
-      });
-      ok = false;
-    }
-
-    if (isNaN(month) || month > 12 || month < 1) {
-      this.setState({
-        monthError: 'Enter a valid month'
-      });
-      ok = false;
-    }
-
-    if (isNaN(year) || year > 2100 || year < 1900) {
-      this.setState({
-        yearError: 'Enter a valid year'
-      });
-      ok = false;
-    }
-
-    if (firstName.length === 0) {
-      this.setState({
-        firstNameError: 'Enter a first name'
-      });
-      ok = false;
-    }
-
-    if (lastName.length === 0) {
-      this.setState({
-        lastNameError: 'Enter a first name'
-      });
-      ok = false;
-    }
-
-    return ok;
-  }
-
   goBack() {
-    this.props.actions.clearSelectedChild();
+    this.props.actions.clearSelectedContact();
+  }
+
+  handleCountryChange(event, index, value) {
+    this.setState({
+      country: value
+    });
+  }
+
+  handleCityChange(value) {
+    this.setState({
+      city: value
+    });
   }
 
   renderEmpty() {
@@ -153,6 +114,11 @@ export class ChildEdit extends React.Component {
   render() {
     if (!this.props.selectedItem) {
       return this.renderEmpty();
+    }
+
+    let matchedCities = [];
+    if (this.state.zipCode.length > 0) {
+      matchedCities = zipCodes.filter((obj) => obj.zip === this.state.zipCode);
     }
 
     return (
@@ -178,7 +144,6 @@ export class ChildEdit extends React.Component {
                 floatingLabelText="First Name"
                 valueLink={this.linkState('firstName')}
                 errorText={this.state.firstNameError}
-                onFocus={this.clearErrors.bind(this)}
                 onEnterKeyDown={this.onSave.bind(this)}
                 />
               <TextField
@@ -192,43 +157,52 @@ export class ChildEdit extends React.Component {
           </div>
 
           <div className="Form-section">
-            <span className="Form-label">birthday</span>
+            <span className="Form-label">address</span>
             <span className="Form-value">
               <TextField
-                hintText="00"
-                floatingLabelText="Day"
-                style={{width: 200}}
-                valueLink={this.linkState('day')}
-                errorText={this.state.dayError}
-                onFocus={this.clearErrors.bind(this)}
+                floatingLabelText="Street"
+                valueLink={this.linkState('street')}
                 onEnterKeyDown={this.onSave.bind(this)}
                 />
               <TextField
-                hintText="00"
-                floatingLabelText="Month"
-                style={{width: 200}}
-                valueLink={this.linkState('month')}
-                errorText={this.state.monthError}
-                onFocus={this.clearErrors.bind(this)}
+                floatingLabelText="Zip"
+                valueLink={this.linkState('zipCode')}
                 onEnterKeyDown={this.onSave.bind(this)}
                 />
-              <TextField
-                hintText="0000"
-                floatingLabelText="Year"
-                style={{width: 200}}
-                valueLink={this.linkState('year')}
-                errorText={this.state.yearError}
-                onFocus={this.clearErrors.bind(this)}
-                onEnterKeyDown={this.onSave.bind(this)}
+              <AutoComplete
+                floatingLabelText="City"
+                value={this.state.city}
+                onNewRequest={this.handleCityChange.bind(this)}
+                dataSource={matchedCities.map(obj => obj.city)}
                 />
+              <SelectField
+                hintText="Country"
+                floatingLabelText="Country"
+                value={this.state.country}
+                onChange={this.handleCountryChange.bind(this)}>
+                <MenuItem value="Belgium" primaryText="Belgium"/>
+                <MenuItem value="Nederland" primaryText="Nederland"/>
+                <MenuItem value="Deutschland" primaryText="Deutschland"/>
+              </SelectField>
             </span>
           </div>
 
           <div className="Form-section">
-            <span className="Form-label">contact person</span>
+            <span className="Form-label">contact details</span>
             <span className="Form-value">
-              <ContactPersonSelector
-                child={this.props.selectedItem}
+              <TextField
+                hintText="Mobile Phone"
+                floatingLabelText="Mobile Phone"
+                valueLink={this.linkState('mobilePhone')}
+                errorText={this.state.mobilePhoneError}
+                onEnterKeyDown={this.onSave.bind(this)}
+                />
+              <TextField
+                hintText="Landline"
+                floatingLabelText="Landline"
+                valueLink={this.linkState('landline')}
+                errorText={this.state.landlineError}
+                onEnterKeyDown={this.onSave.bind(this)}
                 />
             </span>
           </div>
@@ -238,14 +212,14 @@ export class ChildEdit extends React.Component {
   }
 }
 
-reactMixin(ChildEdit.prototype, React.addons.LinkedStateMixin);
+reactMixin(ContactEdit.prototype, React.addons.LinkedStateMixin);
 
 const mapStateToProps = (state) => ({
-  children: state.children.data,
-  selectedItem: state.children.selected,
+  contacts: state.contacts.data,
+  selectedItem: state.contacts.selected,
   token: state.auth.token,
-  isSaving: state.children.isSaving,
-  saveError: state.children.saveError,
+  isSaving: state.contacts.isSaving,
+  saveError: state.contacts.saveError,
   path: state.routing.path
 });
 
@@ -253,4 +227,4 @@ const mapDispatchToProps = (dispatch) => ({
   actions: bindActionCreators(actionCreators, dispatch)
 });
 
-export default connect(mapStateToProps, mapDispatchToProps)(ChildEdit);
+export default connect(mapStateToProps, mapDispatchToProps)(ContactEdit);

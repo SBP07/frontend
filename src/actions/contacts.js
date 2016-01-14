@@ -1,6 +1,8 @@
 import { parseResponse } from '../utils';
 import {GET_CONTACTS_DATA, GET_CONTACTS_DATA_SUCCESS,
-  CONTACT_SELECTED, CONTACT_CLEAR,
+  CONTACT_SELECTED, CONTACT_CLEAR, CONTACT_EDIT_MODE,
+  SAVE_CONTACT_CANCEL, SAVE_CONTACT_REQUEST, SAVE_CONTACT_SUCCESS, SAVE_CONTACT_FAILURE,
+  DELETE_CONTACT_REQUEST, DELETE_CONTACT_SUCCESS, DELETE_CONTACT_FAILURE,
   CONTACT_ADD_BUTTON_CLICKED, CONTACT_EDIT_BUTTON_CLICKED, CONTACT_DELETE_BUTTON_CLICKED}
   from '../constants';
 import { pushPath } from 'redux-simple-router';
@@ -52,17 +54,16 @@ export function fetchContactsData(token) {
 
 // UI
 
-export function contactSelected(contact) {
+export function contactSelected(contactId) {
   return {
     type: CONTACT_SELECTED,
-    payload: contact
+    payload: contactId
   };
 }
 
-export function contactClicked(contact) {
+export function contactClicked(contactId, rootPath = '/contact/') {
   return (dispatch) => {
-    dispatch(pushPath('/contact/' + contact.id, contact));
-    dispatch(contactSelected(contact));
+    dispatch(pushPath(rootPath + contactId));
   };
 }
 
@@ -81,17 +82,135 @@ export function contactAddButtonClicked() {
   };
 }
 
-export function contactEditButtonClicked(contact) {
+export function contactEditButtonClicked(contactId) {
   return (dispatch) => {
-    dispatch(pushPath('/contact/edit/' + contact.id, contact));
+    dispatch(pushPath('/contact/edit/' + contactId));
     dispatch({
       type: CONTACT_EDIT_BUTTON_CLICKED
     });
   };
 }
 
+export function contactEditMode(isEditMode) {
+  return {
+    type: CONTACT_EDIT_MODE,
+    payload: isEditMode
+  };
+}
+
 export function contactDeleteButtonClicked() {
   return {
     type: CONTACT_DELETE_BUTTON_CLICKED
+  };
+}
+
+
+// SAVE
+export function saveContactRequest() {
+  return {
+    type: SAVE_CONTACT_REQUEST
+  };
+}
+
+export function saveContactSuccess(contact) {
+  return {
+    type: SAVE_CONTACT_SUCCESS,
+    payload: {
+      contact: contact
+    }
+  };
+}
+
+export function cancelSaveContact() {
+  return {
+    type: SAVE_CONTACT_CANCEL
+  };
+}
+
+export function saveContactFailure(error) {
+  return {
+    type: SAVE_CONTACT_FAILURE,
+    payload: error
+  };
+}
+
+export function saveContact(token, contactData) {
+  return function(dispatch) {
+    dispatch(saveContactRequest());
+    return fetch(`${backendURL}/api/v0/contactPerson`, {
+      method: contactData.id ? 'put' : 'post',
+      credentials: 'include',
+      headers: {
+        'Accept': 'application/json',
+        'Content-Type': 'application/json',
+        'X-Auth-Token': `${token}`
+      },
+      body: JSON.stringify(contactData)
+    })
+    .then(parseResponse)
+    .then(({json: json, token: newToken}) => {
+      dispatch(saveContactSuccess(json));
+      dispatch(loginUserSuccess(newToken));
+      dispatch(fetchContactsData(newToken));
+    })
+    .catch(error => {
+      if (error.response && error.response.status === 401) {
+        dispatch(loginUserFailure(error));
+      } else {
+        dispatch(saveContactFailure(error.json));
+        throw error;
+      }
+    });
+  };
+}
+
+
+// DELETE
+export function deleteContactRequest() {
+  return {
+    type: DELETE_CONTACT_REQUEST
+  };
+}
+
+export function deleteContactSuccess(json, contact) {
+  return {
+    type: DELETE_CONTACT_SUCCESS,
+    payload: contact
+  };
+}
+
+export function deleteContactFailure(error) {
+  return {
+    type: DELETE_CONTACT_FAILURE,
+    payload: error
+  };
+}
+
+export function deleteContact(token, contactData) {
+  return function(dispatch) {
+    dispatch(deleteContactRequest());
+    return fetch(`${backendURL}/api/v0/contactPerson/id/${contactData.id}`, {
+      method: 'delete',
+      credentials: 'include',
+      headers: {
+        'Accept': 'application/json',
+        'Content-Type': 'application/json',
+        'X-Auth-Token': `${token}`
+      }
+    })
+      .then(parseResponse)
+      .then(({json: json, token: newToken}) => {
+        dispatch(deleteContactSuccess(json, contactData));
+        dispatch(pushPath('/contact'));
+        dispatch(loginUserSuccess(newToken));
+      })
+      .catch(error => {
+        if (error.response && error.response.status === 401) {
+          dispatch(loginUserFailure(error));
+        } else {
+          dispatch(deleteContactFailure(error.json));
+          throw error;
+        }
+      });
   };
 }

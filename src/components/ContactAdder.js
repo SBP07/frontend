@@ -7,15 +7,14 @@ import actionCreators from '../actions';
 import TextField from 'material-ui/lib/text-field';
 import FlatButton from 'material-ui/lib/flat-button';
 import Dialog from 'material-ui/lib/dialog';
-import { pad } from '../utils/index.js';
 import SelectField from 'material-ui/lib/select-field';
 import AutoComplete from 'material-ui/lib/auto-complete';
 import zipCodes from '../constants/zip-be';
 import MenuItem from 'material-ui/lib/menus/menu-item';
 
-export class ChildrenAdder extends React.Component {
+export class ContactsAdder extends React.Component {
   static propTypes = {
-    selectedChild: React.PropTypes.object,
+    selectedItem: React.PropTypes.object,
     actions: React.PropTypes.object,
     token: React.PropTypes.string,
     addMode: React.PropTypes.bool,
@@ -39,95 +38,39 @@ export class ChildrenAdder extends React.Component {
   }
 
   onDialogCancel() {
-    this.props.actions.cancelSaveChild();
+    this.props.actions.cancelSaveContact();
   }
 
 
   onDialogSubmit() {
     if (this.props.isSaving === true) return;
-    console.log(this.state);
-    if (this.verify()) {
-      let {day, month, year} = this.state;
-      day = pad(parseInt(day, 10));
-      month = pad(parseInt(month, 10));
-      year = parseInt(year, 10);
 
-      const child = {
-        firstName: this.state.firstName,
-        lastName: this.state.lastName,
-        birthDate: `${year}-${month}-${day}`,
-        tenantCanonicalName: SPEELDATABASE
-      };
-      this.props.actions.saveChild(this.props.token, child);
-    }
-  }
+    const contact = {
+      firstName: this.state.firstName,
+      lastName: this.state.lastName,
+      mobilePhone: this.state.mobilePhone,
+      landline: this.state.landline,
+      tenantCanonicalName: SPEELDATABASE
+    };
 
-  verify() {
-    let {day, month, year} = this.state;
-    const {firstName, lastName} = this.state;
-    let ok = true;
-
-    this.setState({
-      dayError: null,
-      monthError: null,
-      yearError: null
-    });
-
-    day = parseInt(day, 10);
-    month = parseInt(month, 10);
-    year = parseInt(year, 10);
-
-    if (isNaN(day) || day > 31 || day < 1) {
-      this.setState({
-        dayError: 'Enter a valid day'
-      });
-      ok = false;
+    const {street, zipCode, city, country} = this.state;
+    if (street && zipCode && city && country) {
+      contact.address = {street, zipCode, city, country};
+      contact.address.zipCode = parseInt(contact.address.zipCode, 10);
     }
 
-    if (isNaN(month) || month > 12 || month < 1) {
-      this.setState({
-        monthError: 'Enter a valid month'
-      });
-      ok = false;
-    }
-
-    if (isNaN(year) || year > 2100 || year < 1900) {
-      this.setState({
-        yearError: 'Enter a valid year'
-      });
-      ok = false;
-    }
-
-    if (firstName.length === 0) {
-      this.setState({
-        firstNameError: 'Enter a first name'
-      });
-      ok = false;
-    }
-
-    if (lastName.length === 0) {
-      this.setState({
-        lastNameError: 'Enter a first name'
-      });
-      ok = false;
-    }
-
-    return ok;
-  }
-
-  clearErrors() {
-    this.setState({
-      dayError: null,
-      monthError: null,
-      yearError: null,
-      firstNameError: null,
-      lastNameError: null
-    });
+    this.props.actions.saveContact(this.props.token, contact);
   }
 
   handleCountryChange(event, index, value) {
     this.setState({
       country: value
+    });
+  }
+
+  handleCityChange(value) {
+    this.setState({
+      city: value
     });
   }
 
@@ -171,7 +114,6 @@ export class ChildrenAdder extends React.Component {
                 floatingLabelText="First Name"
                 valueLink={this.linkState('firstName')}
                 errorText={this.state.firstNameError}
-                onFocus={this.clearErrors.bind(this)}
                 onEnterKeyDown={this.onDialogSubmit.bind(this)}
                 />
               <TextField
@@ -197,6 +139,8 @@ export class ChildrenAdder extends React.Component {
                 />
               <AutoComplete
                 floatingLabelText="City"
+                value={this.state.city}
+                onNewRequest={this.handleCityChange.bind(this)}
                 dataSource={matchedCities.map(obj => obj.city)}
                 />
               <SelectField
@@ -211,24 +155,44 @@ export class ChildrenAdder extends React.Component {
             </span>
           </div>
 
+          <div className="Form-section">
+            <span className="Form-label">contact details</span>
+            <span className="Form-value">
+              <TextField
+                hintText="Mobile Phone"
+                floatingLabelText="Mobile Phone"
+                valueLink={this.linkState('mobilePhone')}
+                errorText={this.state.mobilePhoneError}
+                onEnterKeyDown={this.onDialogSubmit.bind(this)}
+                />
+              <TextField
+                hintText="Landline"
+                floatingLabelText="Landline"
+                valueLink={this.linkState('landline')}
+                errorText={this.state.landlineError}
+                onEnterKeyDown={this.onDialogSubmit.bind(this)}
+                />
+            </span>
+          </div>
+
         </div>
       </Dialog>
     );
   }
 }
 
-reactMixin(ChildrenAdder.prototype, React.addons.LinkedStateMixin);
+reactMixin(ContactsAdder.prototype, React.addons.LinkedStateMixin);
 
 const mapStateToProps = (state) => ({
-  selectedChild: state.children.selected,
+  selectedItem: state.contacts.selected,
   token: state.auth.token,
-  addMode: state.children.addMode,
-  isSaving: state.children.isSaving,
-  saveError: state.children.saveError
+  addMode: state.contacts.addMode,
+  isSaving: state.contacts.isSaving,
+  saveError: state.contacts.saveError
 });
 
 const mapDispatchToProps = (dispatch) => ({
   actions: bindActionCreators(actionCreators, dispatch)
 });
 
-export default connect(mapStateToProps, mapDispatchToProps)(ChildrenAdder);
+export default connect(mapStateToProps, mapDispatchToProps)(ContactsAdder);

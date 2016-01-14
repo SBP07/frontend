@@ -19,23 +19,19 @@ export default createReducer(initialState, {
   [GET_CHILDREN_DATA_SUCCESS]: (state, payload) => {
     return Object.assign({}, state, {
       'data': payload.data,
-      'selected': null,
-      'isFetching': false,
-      'editMode': false
+      'isFetching': false
     });
   },
   [GET_CHILDREN_DATA]: (state) => {
     return Object.assign({}, state, {
-      'isFetching': true,
-      'editMode': false,
-      'selected': null
+      'isFetching': true
     });
   },
   // UI
-  [CHILD_SELECTED]: (state, childId) => {
-    const child = state.data.filter(c => c.id === childId)[0];
+  [CHILD_SELECTED]: (state, itemId) => {
+    const item = state.data.filter(c => c.id === itemId)[0];
     return Object.assign({}, state, {
-      'selected': child
+      'selected': item
     });
   },
   [CHILD_CLEAR]: (state) => {

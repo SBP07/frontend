@@ -292,7 +292,7 @@ ContactPersonSelector.Divider = Divider;
 
 const mapStateToProps = (state) => ({
   children: state.children.data,
-  selectedChild: state.children.selected,
+  selectedItem: state.children.selected,
   contacts: state.contacts.data
 });
 

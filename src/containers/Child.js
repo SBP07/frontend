@@ -4,9 +4,9 @@ import {bindActionCreators} from 'redux';
 import actionCreators from '../actions';
 
 import PersonSelector from '../components/PersonSelector';
-import ChildrenButtons from '../components/ChildrenButtons';
+import PersonButtons from '../components/PersonButtons';
+import PersonDestroyer from '../components/PersonDestroyer';
 import ChildrenAdder from '../components/ChildrenAdder';
-import ChildrenDestroyer from '../components/ChildrenDestroyer';
 
 export class Child extends React.Component {
   static propTypes = {
@@ -16,7 +16,11 @@ export class Child extends React.Component {
     params: React.PropTypes.object,
     actions: React.PropTypes.object,
     token: React.PropTypes.string,
-    editMode: React.PropTypes.bool
+    editMode: React.PropTypes.bool,
+    addMode: React.PropTypes.bool,
+    deleteMode: React.PropTypes.bool,
+    isSaving: React.PropTypes.bool,
+    saveError: React.PropTypes.string
   }
 
   componentWillMount() {
@@ -69,12 +73,30 @@ export class Child extends React.Component {
             (item) => this.props.actions.childClicked(item.id, rootPath)
           }
           dataSource={this.props.dataSource}
-          selectedItem={this.props.selectedItem}
-          params={this.props.params} />
+          selectedItem={this.props.selectedItem} />
         {this.props.children}
-        <ChildrenButtons params={this.props.params} />
+        <PersonButtons
+          selectedItem={this.props.selectedItem}
+          editMode={this.props.editMode}
+          addMode={this.props.addMode}
+          deleteMode={this.props.deleteMode}
+          onAddClick={this.props.actions.childAddButtonClicked}
+          onEditClick={
+            () => this.props.actions.childEditButtonClicked(this.props.selectedItem.id)
+          }
+          onDeleteClick={this.props.actions.childDeleteButtonClicked}
+          />
+        <PersonDestroyer
+          selectedItem={this.props.selectedItem}
+          deleteMode={this.props.deleteMode}
+          isSaving={this.props.isSaving}
+          saveError={this.props.saveError}
+          onCancel={this.props.actions.childDeleteButtonClicked}
+          onSubmit={
+            () => this.props.actions.deleteChild(this.props.token, this.props.selectedItem)
+          }
+          />
         <ChildrenAdder />
-        <ChildrenDestroyer />
       </div>
     );
   }
@@ -85,7 +107,11 @@ const mapStateToProps = (state) => ({
   selectedItem: state.children.selected,
   token: state.auth.token,
   path: state.routing.path,
-  editMode: state.children.editMode
+  editMode: state.children.editMode,
+  addMode: state.children.addMode,
+  deleteMode: state.children.deleteMode,
+  isSaving: state.children.isSaving,
+  saveError: state.children.saveError
 });
 
 const mapDispatchToProps = (dispatch) => ({

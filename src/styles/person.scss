@@ -1,6 +1,6 @@
 @import 'base';
 
-.Children {
+.Person {
   position: absolute;
   left: 0;
   right: 0;
@@ -9,7 +9,7 @@
   overflow: hidden;
 }
 
-.Children-main {
+.Person-main {
   width: 75%;
   display: block;
   float: left;
@@ -24,10 +24,10 @@
     }
   }
 }
-.ChildDetails {
+.Person-details {
   padding: 50px;
 }
-.Child-name {
+.Person-name {
   margin: 0;
   font-weight: 100;
   margin-bottom: 50px;
@@ -37,24 +37,24 @@
     font-family: $font-monospace;
   }
 }
-.Child-section {
+.Person-section {
   padding: 10px 0;
   border-bottom: 1px dashed rgba(0, 0, 0, .1);
   &:last-child {
     border-bottom: none;
   }
 }
-.Child-label {
+.Person-label {
   display: inline-block;
   width: 100px;
   color: rgba(0, 0, 0, .7);
 }
-.Child-value {
+.Person-value {
   display: inline-block;
   color: black;
 }
 
-.Children-add {
+.Person-add {
   padding: 11px;
   cursor: pointer;
   user-select: none;

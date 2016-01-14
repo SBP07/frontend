@@ -11,7 +11,7 @@ import { pad } from '../utils/index.js';
 
 export class ChildrenAdder extends React.Component {
   static propTypes = {
-    selectedChild: React.PropTypes.object,
+    selectedItem: React.PropTypes.object,
     actions: React.PropTypes.object,
     token: React.PropTypes.string,
     addMode: React.PropTypes.bool,
@@ -205,7 +205,7 @@ export class ChildrenAdder extends React.Component {
 reactMixin(ChildrenAdder.prototype, React.addons.LinkedStateMixin);
 
 const mapStateToProps = (state) => ({
-  selectedChild: state.children.selected,
+  selectedItem: state.children.selected,
   token: state.auth.token,
   addMode: state.children.addMode,
   isSaving: state.children.isSaving,
