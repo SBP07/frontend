@@ -53,6 +53,7 @@ export default class Contact extends React.Component {
       if (dataSource.length === 0) return;
       if (selectedItem && selectedItem.id === id) return; // Same item
       this.props.actions.contactSelected(id);
+      this.props.actions.fetchChildrenForContact(this.props.token, id);
     }
   }
 

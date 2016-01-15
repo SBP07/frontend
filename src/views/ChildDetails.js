@@ -12,7 +12,6 @@ import Divider from 'material-ui/lib/divider';
 import CommunicationCall from 'material-ui/lib/svg-icons/communication/call';
 import CommunicationAddress from 'material-ui/lib/svg-icons/communication/business';
 
-
 export class ChildDetails extends React.Component {
   static propTypes = {
     selectedItem: React.PropTypes.object,

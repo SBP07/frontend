@@ -3,10 +3,12 @@ import { GET_CONTACTS_DATA, GET_CONTACTS_DATA_SUCCESS,
   CONTACT_SELECTED, CONTACT_CLEAR,
   DELETE_CONTACT_REQUEST, DELETE_CONTACT_SUCCESS, DELETE_CONTACT_FAILURE,
   SAVE_CONTACT_REQUEST, SAVE_CONTACT_SUCCESS, SAVE_CONTACT_CANCEL, SAVE_CONTACT_FAILURE,
-  CONTACT_ADD_BUTTON_CLICKED, CONTACT_EDIT_BUTTON_CLICKED, CONTACT_DELETE_BUTTON_CLICKED} from '../constants';
+  CONTACT_ADD_BUTTON_CLICKED, CONTACT_EDIT_BUTTON_CLICKED, CONTACT_DELETE_BUTTON_CLICKED,
+  GET_CONTACT_CHILDREN_SUCCESS, GET_CONTACT_CHILDREN} from '../constants';
 
 const initialState = {
   data: [],
+  relations: [],
   selected: null,
   isFetching: false,
   editMode: false,
@@ -115,6 +117,18 @@ export default createReducer(initialState, {
     return Object.assign({}, state, {
       'isSaving': false,
       'saveError': msg
+    });
+  },
+  [GET_CONTACT_CHILDREN_SUCCESS]: (state, payload) => {
+    return Object.assign({}, state, {
+      'isFetching': false,
+      'relations': payload
+    });
+  },
+  [GET_CONTACT_CHILDREN]: (state) => {
+    return Object.assign({}, state, {
+      'isFetching': true,
+      'relations': []
     });
   }
 });

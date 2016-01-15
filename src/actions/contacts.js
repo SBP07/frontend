@@ -3,7 +3,8 @@ import {GET_CONTACTS_DATA, GET_CONTACTS_DATA_SUCCESS,
   CONTACT_SELECTED, CONTACT_CLEAR, CONTACT_EDIT_MODE,
   SAVE_CONTACT_CANCEL, SAVE_CONTACT_REQUEST, SAVE_CONTACT_SUCCESS, SAVE_CONTACT_FAILURE,
   DELETE_CONTACT_REQUEST, DELETE_CONTACT_SUCCESS, DELETE_CONTACT_FAILURE,
-  CONTACT_ADD_BUTTON_CLICKED, CONTACT_EDIT_BUTTON_CLICKED, CONTACT_DELETE_BUTTON_CLICKED}
+  CONTACT_ADD_BUTTON_CLICKED, CONTACT_EDIT_BUTTON_CLICKED, CONTACT_DELETE_BUTTON_CLICKED,
+  GET_CONTACT_CHILDREN_SUCCESS, GET_CONTACT_CHILDREN}
   from '../constants';
 import { pushPath } from 'redux-simple-router';
 
@@ -212,5 +213,45 @@ export function deleteContact(token, contactData) {
           throw error;
         }
       });
+  };
+}
+
+// Getting contacts
+export function receiveChildrenForContact(relations) {
+  return {
+    type: GET_CONTACT_CHILDREN_SUCCESS,
+    payload: relations
+  };
+}
+
+export function fetchChildrenForContactRequest(childId) {
+  return {
+    type: GET_CONTACT_CHILDREN,
+    payload: childId
+  };
+}
+
+export function fetchChildrenForContact(token, id) {
+  return (dispatch) => {
+    dispatch(fetchChildrenForContactRequest(id));
+    return fetch(`${backendURL}/api/v0/contactPerson/id/${id}/children`, {
+      credentials: 'include',
+      headers: {
+        'X-Auth-Token': `${token}`
+      }
+    })
+    .then(parseResponse)
+    .then(({json: relations, token: newToken}) => {
+      dispatch(receiveChildrenForContact(relations));
+      dispatch(loginUserSuccess(newToken));
+    })
+    .catch(error => {
+      if (error.response && error.response.status === 401) {
+        dispatch(loginUserFailure(error));
+        dispatch(pushPath('/login'));
+      } else {
+        throw error;
+      }
+    });
   };
 }
